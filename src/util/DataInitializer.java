@@ -22,6 +22,7 @@ public class DataInitializer {
         initTeams(dm);
         initPlayers(dm, adminService);
         initMatchRecords(dm, adminService);
+        simulatePlayerStats(dm);  // 模拟比赛数据，让胜率不再是0
     }
 
     /**
@@ -374,5 +375,44 @@ public class DataInitializer {
         adminService.addMatchRecord(1, 2, MatchResult.TEAM_B_WIN, 2, 1280, "2024-04-01 14:30");
 
         System.out.println("[初始化] 已创建 10 条比赛记录");
+    }
+
+    /**
+     * 模拟每个玩家的比赛数据，让胜率真实有意义。
+     * 各队明星选手场次多、胜率高，替补选手场次少。
+     */
+    private static void simulatePlayerStats(GameDataManager dm) {
+        // AG (teamId=1): 梦泪(8场5胜), 一诺(6场4胜), 长生(4场2胜), Cat(7场4胜)
+        simulateStats(dm, 1, 8, 5);
+        simulateStats(dm, 2, 6, 4);
+        simulateStats(dm, 3, 4, 2);
+        simulateStats(dm, 4, 7, 4);
+
+        // Wolves (teamId=2): Fly(10场7胜), 妖刀(6场3胜), 小胖(5场3胜), 向鱼(4场2胜)
+        simulateStats(dm, 5, 10, 7);
+        simulateStats(dm, 6, 6, 3);
+        simulateStats(dm, 7, 5, 3);
+        simulateStats(dm, 8, 4, 2);
+
+        // eStar (teamId=3): 花海(8场5胜), 清融(6场3胜), 坦然(5场3胜), 子阳(4场2胜)
+        simulateStats(dm, 9, 8, 5);
+        simulateStats(dm, 10, 6, 3);
+        simulateStats(dm, 11, 5, 3);
+        simulateStats(dm, 12, 4, 2);
+
+        System.out.println("[初始化] 已模拟玩家比赛胜率数据");
+    }
+
+    /**
+     * 帮一个玩家模拟 total 场比赛，其中前 winCount 场为胜。
+     * incrementMatch(true) 会让 totalMatches 和 wins 各自累加，并自动重算 winRate。
+     */
+    private static void simulateStats(GameDataManager dm, int playerId, int total, int winCount) {
+        Player p = dm.findPlayerById(playerId);
+        if (p != null) {
+            for (int i = 0; i < total; i++) {
+                p.incrementMatch(i < winCount);
+            }
+        }
     }
 }

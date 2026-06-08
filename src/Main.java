@@ -41,13 +41,14 @@ public class Main {
 
         // 主循环
         while (true) {
-            System.out.println("\n╔══════════════════════════════════╗");
-            System.out.println("║    王者荣耀信息管理系统           ║");
-            System.out.println("╠══════════════════════════════════╣");
-            System.out.println("║  1. 登录                          ║");
-            System.out.println("║  2. 保存数据到文件                ║");
-            System.out.println("║  0. 退出系统                      ║");
-            System.out.println("╚══════════════════════════════════╝");
+            String line = repeatStr("=", 40);
+            System.out.println("\n" + line);
+            System.out.println("  王者荣耀信息管理系统");
+            System.out.println(line);
+            System.out.println("  1. 登录");
+            System.out.println("  2. 保存数据到文件");
+            System.out.println("  0. 退出系统");
+            System.out.println(line);
 
             int choice = InputHelper.readIntInRange("请选择: ", 0, 2);
             switch (choice) {
@@ -85,15 +86,16 @@ public class Main {
 
     private static void adminMenuLoop() {
         while (true) {
-            System.out.println("\n╔═══════════ Admin 菜单 ═══════════╗");
-            System.out.println("║  当前用户: " + padRight(auth.getCurrentUserInfo(), 22) + "║");
-            System.out.println("╠══════════════════════════════════╣");
-            System.out.println("║  1. 玩家查询      2. 战队概览     ║");
-            System.out.println("║  3. 英雄详情      4. 装备统计     ║");
-            System.out.println("║  5. 比赛记录      6. 排行榜       ║");
-            System.out.println("║  7. 数据管理      8. 保存数据     ║");
-            System.out.println("║  0. 登出                          ║");
-            System.out.println("╚══════════════════════════════════╝");
+            String line = repeatStr("=", 40);
+            System.out.println("\n" + line);
+            System.out.println("  Admin 菜单  |  " + auth.getCurrentUserInfo());
+            System.out.println(line);
+            System.out.println("  1. 玩家查询        2. 战队概览");
+            System.out.println("  3. 英雄详情        4. 装备统计");
+            System.out.println("  5. 比赛记录        6. 排行榜");
+            System.out.println("  7. 数据管理        8. 保存数据");
+            System.out.println("  0. 登出");
+            System.out.println(line);
 
             int choice = InputHelper.readIntInRange("请选择: ", 0, 8);
             boolean logout = false;
@@ -115,15 +117,16 @@ public class Main {
 
     private static void playerMenuLoop() {
         while (true) {
-            System.out.println("\n╔══════════ Player 菜单 ═══════════╗");
-            System.out.println("║  当前用户: " + padRight(auth.getCurrentUserInfo(), 22) + "║");
-            System.out.println("╠══════════════════════════════════╣");
-            System.out.println("║  1. 查看我的信息  2. 战队概览     ║");
-            System.out.println("║  3. 英雄详情      4. 装备统计     ║");
-            System.out.println("║  5. 比赛记录      6. 排行榜       ║");
-            System.out.println("║  7. 查看我的英雄  8. 编辑个人信息 ║");
-            System.out.println("║  0. 登出                          ║");
-            System.out.println("╚══════════════════════════════════╝");
+            String line = repeatStr("=", 40);
+            System.out.println("\n" + line);
+            System.out.println("  Player 菜单  |  " + auth.getCurrentUserInfo());
+            System.out.println(line);
+            System.out.println("  1. 查看我的信息    2. 战队概览");
+            System.out.println("  3. 英雄详情        4. 装备统计");
+            System.out.println("  5. 比赛记录        6. 排行榜");
+            System.out.println("  7. 查看我的英雄    8. 编辑个人信息");
+            System.out.println("  0. 登出");
+            System.out.println(line);
 
             int choice = InputHelper.readIntInRange("请选择: ", 0, 8);
             switch (choice) {
@@ -413,8 +416,9 @@ public class Main {
 
     // ============ 工具 ============
 
-    private static String padRight(String s, int len) {
-        if (s.length() >= len) return s;
-        return s + " ".repeat(len - s.length());
+    private static String repeatStr(String s, int count) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < count; i++) sb.append(s);
+        return sb.toString();
     }
 }
