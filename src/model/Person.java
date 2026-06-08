@@ -15,13 +15,13 @@ import model.interfaces.Identifiable;
 public abstract class Person implements Identifiable {
     private int id;              // 唯一编号
     private String name;         // 姓名/昵称
-    private int passwordHash;    // 密码哈希（用 String.hashCode() 生成）
+    private String password;     // 密码（明文存储）
 
     // 构造器：创建对象时初始化三个基本属性
     public Person(int id, String name, String password) {
         this.id = id;
         this.name = name;
-        this.passwordHash = password.hashCode();  // hashCode() 把字符串转为数字
+        this.password = password;
     }
 
     // === getter/setter ===
@@ -41,39 +41,28 @@ public abstract class Person implements Identifiable {
 
     /**
      * 检查密码是否正确
-     * @param rawPassword 用户输入的明文密码
-     * @return true = 密码正确, false = 密码错误
+     * 用 .equals() 比较字符串，不能用 ==
      */
     public boolean checkPassword(String rawPassword) {
-        return this.passwordHash == rawPassword.hashCode();
+        return this.password.equals(rawPassword);
     }
 
     /**
      * 修改密码
      */
     public void setPassword(String newPassword) {
-        this.passwordHash = newPassword.hashCode();
+        this.password = newPassword;
     }
 
     /**
-     * 获取密码哈希（供保存到文件使用）
+     * 获取密码（供保存到文件使用）
      */
-    public int getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
     /**
-     * 直接设置密码哈希（供从文件加载使用）
-     */
-    public void setPasswordHash(int hash) {
-        this.passwordHash = hash;
-    }
-
-    /**
-     * 抽象方法 —— 没有方法体，由子类各自实现
-     * 子类必须实现这个方法，否则编译会报错。
-     * 这是"多态"的核心：同一条 displayInfo() 调用，
-     * 在 Player 和 Admin 身上产生不同的输出。
+     * 抽象方法
      */
     public abstract void displayInfo();
 

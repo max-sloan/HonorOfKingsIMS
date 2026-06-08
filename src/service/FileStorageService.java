@@ -52,12 +52,12 @@ public class FileStorageService {
 
     private void savePlayers(GameDataManager dm) throws IOException {
         try (PrintWriter pw = new PrintWriter(new FileWriter(DATA_DIR + "/players.csv"))) {
-            pw.println("id,name,passwordHash,level,rankScore,totalMatches,wins,winRate,teamId,teamName,heroIds");
+            pw.println("id,name,password,level,rankScore,totalMatches,wins,winRate,teamId,teamName,heroIds");
             for (Player p : dm.getAllPlayers()) {
                 String heroIds = String.join(";",
                     p.getHeroIdList().stream().map(String::valueOf).toArray(String[]::new));
-                pw.printf(Locale.US, "%d,%s,%d,%d,%d,%d,%d,%.1f,%d,%s,%s\n",
-                    p.getId(), p.getName(), p.getPasswordHash(),  // 用 Person 新增的 getPasswordHash()
+                pw.printf(Locale.US, "%d,%s,%s,%d,%d,%d,%d,%.1f,%d,%s,%s\n",
+                    p.getId(), p.getName(), p.getPassword(),
                     p.getLevel(), p.getRankScore(),
                     p.getTotalMatches(), p.getWins(), p.getWinRate(),
                     p.getTeamId(), p.getTeamName(), heroIds);
@@ -217,7 +217,7 @@ public class FileStorageService {
      * 加载玩家 —— 完整还原所有字段
      *
      * CSV 格式:
-     * id,name,passwordHash,level,rankScore,totalMatches,wins,winRate,teamId,teamName,heroIds
+     * id,name,password,level,rankScore,totalMatches,wins,winRate,teamId,teamName,heroIds
      */
     private void loadPlayers(GameDataManager dm) throws IOException {
         File file = new File(DATA_DIR + "/players.csv");
@@ -230,7 +230,7 @@ public class FileStorageService {
                 String[] parts = line.split(",");
                 int id = Integer.parseInt(parts[0]);
                 String name = parts[1];
-                int passwordHash = Integer.parseInt(parts[2]);
+                String password = parts[2];
                 int level = Integer.parseInt(parts[3]);
                 int rankScore = Integer.parseInt(parts[4]);
                 int totalMatches = Integer.parseInt(parts[5]);
@@ -238,9 +238,8 @@ public class FileStorageService {
                 int teamId = Integer.parseInt(parts[8]);
                 String teamName = parts[9];
 
-                // 创建玩家（密码用占位，马上覆盖哈希）
-                Player p = new Player(id, name, "temp", level, rankScore);
-                p.setPasswordHash(passwordHash);   // 恢复原始密码哈希
+                // 创建玩家，直接使用加载的密码
+                Player p = new Player(id, name, password, level, rankScore);
                 p.setTotalMatches(totalMatches);   // 恢复比赛数据
                 p.setWins(wins);
                 p.updateWinRate();                  // 根据 totalMatches+wins 重算胜率
