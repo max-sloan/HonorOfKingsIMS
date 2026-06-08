@@ -65,6 +65,23 @@ public class GameDataManager {
         return instance;
     }
 
+    /**
+     * 清空所有数据（供加载前使用）
+     */
+    public void reset() {
+        playerMap.clear();
+        adminMap.clear();
+        heroMap.clear();
+        equipmentMap.clear();
+        teamMap.clear();
+        matchMap.clear();
+        nextPlayerId    = 1;
+        nextHeroId      = 1;
+        nextEquipmentId = 1;
+        nextTeamId      = 1;
+        nextMatchId     = 1;
+    }
+
     // ============================================
     //  Player 操作
     // ============================================

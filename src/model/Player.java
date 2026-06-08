@@ -87,7 +87,9 @@ public class Player extends Person implements Reportable {
     public void setRankScore(int rankScore) { this.rankScore = rankScore; }
 
     public int getTotalMatches() { return totalMatches; }
+    public void setTotalMatches(int totalMatches) { this.totalMatches = totalMatches; }
     public int getWins() { return wins; }
+    public void setWins(int wins) { this.wins = wins; }
 
     public int getTeamId() { return teamId; }
     public void setTeamId(int teamId) { this.teamId = teamId; }

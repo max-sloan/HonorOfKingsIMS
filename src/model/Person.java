@@ -56,6 +56,20 @@ public abstract class Person implements Identifiable {
     }
 
     /**
+     * 获取密码哈希（供保存到文件使用）
+     */
+    public int getPasswordHash() {
+        return passwordHash;
+    }
+
+    /**
+     * 直接设置密码哈希（供从文件加载使用）
+     */
+    public void setPasswordHash(int hash) {
+        this.passwordHash = hash;
+    }
+
+    /**
      * 抽象方法 —— 没有方法体，由子类各自实现
      * 子类必须实现这个方法，否则编译会报错。
      * 这是"多态"的核心：同一条 displayInfo() 调用，

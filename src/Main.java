@@ -47,13 +47,15 @@ public class Main {
             System.out.println(line);
             System.out.println("  1. 登录");
             System.out.println("  2. 保存数据到文件");
+            System.out.println("  3. 从文件加载数据");
             System.out.println("  0. 退出系统");
             System.out.println(line);
 
-            int choice = InputHelper.readIntInRange("请选择: ", 0, 2);
+            int choice = InputHelper.readIntInRange("请选择: ", 0, 3);
             switch (choice) {
                 case 1: doLogin(); break;
                 case 2: doSaveData(); break;
+                case 3: doLoadData(); break;
                 case 0:
                     System.out.println("感谢使用，再见！");
                     return;
@@ -364,7 +366,7 @@ public class Main {
         }
     }
 
-    // ============ 8. 保存数据 ============
+    // ============ 保存 / 加载 ============
 
     private static void doSaveData() {
         System.out.println("\n===== 保存数据 =====");
@@ -372,6 +374,28 @@ public class Main {
             fileService.saveAll(dm);
         } catch (Exception e) {
             System.out.println("[错误] " + e.getMessage());
+        }
+        InputHelper.waitForEnter();
+    }
+
+    private static void doLoadData() {
+        System.out.println("\n===== 加载数据 =====");
+        System.out.println("[警告] 加载会覆盖当前内存中的数据！");
+        String confirm = InputHelper.readLine("输入 yes 确认: ");
+        if (!"yes".equalsIgnoreCase(confirm)) {
+            System.out.println("[取消]");
+            return;
+        }
+        try {
+            // 清空旧数据
+            dm.reset();
+            fileService.loadAll(dm);
+            // 确保管理员账号存在
+            if (dm.findAdminById(999) == null) {
+                dm.addAdmin(new Admin(999, "admin", "admin", "超级管理员"));
+            }
+        } catch (Exception e) {
+            System.out.println("[错误] 加载失败: " + e.getMessage());
         }
         InputHelper.waitForEnter();
     }
