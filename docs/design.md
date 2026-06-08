@@ -440,3 +440,90 @@ public interface Reportable {
 | 异常处理 | try-catch + 自定义消息 | 练习异常处理概念 |
 | 日期格式 | String ("yyyy-MM-dd") | 简单，避免 Java 日期API复杂度 |
 | 菜单实现 | while(true) + switch-case | 初学者容易理解 |
+
+---
+
+## 8. UML Class Diagram（类图）
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    <<interface>>                             │
+│                    Identifiable                              │
+│  + getId(): int                                              │
+│  + getName(): String                                         │
+└──────────────────────────────────────────────────────────────┘
+          △                    △              △            △
+          │                    │              │            │
+┌─────────┴──────┐   ┌────────┴───┐  ┌───────┴──────┐  ┌──┴─────────┐
+│  Person        │   │   Hero     │  │  Equipment   │  │   Team     │
+│  (abstract)    │   └────────────┘  └──────────────┘  └────────────┘
+│  - id: int     │
+│  - name: String│
+│  - password    │
+│  +displayInfo()│
+└───────┬────────┘
+        │
+   ┌────┴───────────┐
+   │                │
+┌──┴──────┐  ┌──────┴─────┐
+│ Player  │  │   Admin    │
+│ -level  │  │  -role     │
+│ -wins   │  └────────────┘
+│ -teamId │
+│ -heroId │
+│  List   │
+└───┬─────┘
+    │ has-many (ID引用)
+    ▽
+  Hero ─── recommends (ID) ───> Equipment
+
+  Team ─── contains (ID) ───> Player
+  Team ─── participates (ID) ───> MatchRecord
+```
+
+### 关系说明
+
+| 关系 | 类型 | 说明 |
+|------|------|------|
+| Person → Player/Admin | 继承 (extends) | "是一个" 关系 |
+| Player → Hero | 关联 (ID引用) | "拥有" 关系，一对多 |
+| Hero → Equipment | 关联 (ID引用) | "推荐" 关系，一对多 |
+| Team → Player | 聚合 (ID引用) | "包含" 关系 |
+| Identifiable ← Person/Hero/Equipment/Team | 实现 (implements) | "提供" 关系 |
+| Reportable ← Player/Team/MatchRecord | 实现 (implements) | "提供" 关系 |
+
+---
+
+## 9. Data Flow Diagram（数据流图）
+
+```
+┌──────────┐     ┌─────────────────────────────┐
+│  用户输入  │────>│  Main.java (菜单路由)         │
+└──────────┘     └──────────┬──────────────────┘
+                            │
+              ┌─────────────┼─────────────┐
+              ▽             ▽             ▽
+        ┌──────────┐ ┌──────────┐ ┌────────────┐
+        │  Search  │ │ Ranking  │ │  AdminData │
+        │  Service │ │ Service  │ │  Service   │
+        └────┬─────┘ └────┬─────┘ └─────┬──────┘
+             │            │             │
+             └────────────┼─────────────┘
+                          ▽
+              ┌───────────────────────┐
+              │   GameDataManager     │
+              │   (单例，HashMap存储)  │
+              │  playerMap<Integer,..>│
+              │  heroMap<Integer,..>  │
+              │  teamMap<Integer,..>  │
+              │  equipmentMap<Int,..> │
+              │  matchMap<Integer,..> │
+              └───────────┬───────────┘
+                          │
+                          ▽
+              ┌───────────────────────┐
+              │   FileStorageService  │
+              │   CSV 读写            │
+              │   data/*.csv          │
+              └───────────────────────┘
+```
