@@ -100,7 +100,6 @@ public class Main {
             System.out.println(line);
 
             int choice = InputHelper.readIntInRange("请选择: ", 0, 8);
-            boolean logout = false;
             switch (choice) {
                 case 1: doPlayerLookup(); break;
                 case 2: doTeamOverview(); break;
@@ -276,6 +275,9 @@ public class Main {
             matches = new ArrayList<>(dm.getAllMatches());
         }
 
+        // 按时间排序（最近的在前）
+        matches.sort((a, b) -> b.getMatchTime().compareTo(a.getMatchTime()));
+
         int n = InputHelper.readIntOrDefault("显示最近几条(默认全部): ", matches.size());
         int cnt = Math.min(n, matches.size());
         System.out.println("\n最近 " + cnt + " 场:");
@@ -387,6 +389,8 @@ public class Main {
             return;
         }
         try {
+            // 先登出防止旧用户引用失效
+            auth.logout();
             // 清空旧数据
             dm.reset();
             fileService.loadAll(dm);
@@ -395,6 +399,7 @@ public class Main {
                 dm.addAdmin(new Admin(999, "admin", "admin", "超级管理员"));
             }
         } catch (Exception e) {
+            System.out.println("[错误] 加载失败，请检查 data/ 文件夹是否存在");
             System.out.println("[错误] 加载失败: " + e.getMessage());
         }
         InputHelper.waitForEnter();

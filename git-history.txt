@@ -1,0 +1,7 @@
+* aa83040 (HEAD -> master) [AI-Review] bug fixes from code review + final doc...
+* 7963ef0 [Human] replace password hash with plain text password
+* 52d4168 [Human] checkpoint 6 complete - ready for testing phase
+* a616f59 [AI-Implementation] complete file I/O: save and load data via CSV
+* f2435d7 [Human] fix menu alignment and add player win rate simulation
+* 1da742f [AI-Implementation] implement model classes, service layer, and Mai...
+* acc907d [Human] reset project and create clean initial structure

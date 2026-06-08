@@ -22,7 +22,7 @@ public class DataInitializer {
         initTeams(dm);
         initPlayers(dm, adminService);
         initMatchRecords(dm, adminService);
-        simulatePlayerStats(dm);  // 模拟比赛数据，让胜率不再是0
+        simulatePlayerStats(dm);  // 模拟比赛数据让胜率不再是0
     }
 
     /**
@@ -143,30 +143,30 @@ public class DataInitializer {
     }
 
     /**
-     * 第2步：创建 15 个英雄，每个至少关联 2 件装备
+     * 第2步：创建 15 个英雄每个至少关联 2 件装备
      */
     private static void initHeroes(GameDataManager dm, AdminDataService adminService) {
         // 战士
-        Hero h1 = new Hero(1, "李白", HeroType.ASSASSIN, 8, "剑仙李白，来去如风");
+        Hero h1 = new Hero(1, "李白", HeroType.ASSASSIN, 8, "剑仙李白 来去如风");
         dm.addHero(h1);
         adminService.addEquipmentToHero(1, 1);  // 破军
         adminService.addEquipmentToHero(1, 2);  // 无尽战刃
         adminService.addEquipmentToHero(1, 18); // 冷静之靴
 
-        Hero h2 = new Hero(2, "韩信", HeroType.ASSASSIN, 7, "国士无双，偷塔之王");
+        Hero h2 = new Hero(2, "韩信", HeroType.ASSASSIN, 7, "国士无双偷塔之王");
         dm.addHero(h2);
         adminService.addEquipmentToHero(2, 1);  // 破军
         adminService.addEquipmentToHero(2, 4);  // 宗师之力
         adminService.addEquipmentToHero(2, 20); // 贪婪之噬
 
-        Hero h3 = new Hero(3, "孙悟空", HeroType.ASSASSIN, 6, "齐天大圣，一棒入魂");
+        Hero h3 = new Hero(3, "孙悟空", HeroType.ASSASSIN, 6, "齐天大圣一棒入魂");
         dm.addHero(h3);
         adminService.addEquipmentToHero(3, 2);  // 无尽战刃
         adminService.addEquipmentToHero(3, 6);  // 闪电匕首
         adminService.addEquipmentToHero(3, 4);  // 宗师之力
 
         // 法师
-        Hero h4 = new Hero(4, "妲己", HeroType.MAGE, 2, "请尽情吩咐妲己，主人");
+        Hero h4 = new Hero(4, "妲己", HeroType.MAGE, 2, "请尽情吩咐妲己主人");
         dm.addHero(h4);
         adminService.addEquipmentToHero(4, 13); // 博学者之怒
         adminService.addEquipmentToHero(4, 14); // 回响之杖
@@ -189,14 +189,14 @@ public class DataInitializer {
         adminService.addEquipmentToHero(7, 13); // 博学者之怒
         adminService.addEquipmentToHero(7, 15); // 痛苦面具
 
-        Hero h8 = new Hero(8, "诸葛亮", HeroType.MAGE, 6, "天下如棋，一步三算");
+        Hero h8 = new Hero(8, "诸葛亮", HeroType.MAGE, 6, "天下如棋一步三算");
         dm.addHero(h8);
         adminService.addEquipmentToHero(8, 14); // 回响之杖
         adminService.addEquipmentToHero(8, 16); // 辉月
         adminService.addEquipmentToHero(8, 18); // 冷静之靴
 
         // 射手
-        Hero h9 = new Hero(9, "鲁班七号", HeroType.MARKSMAN, 3, "鲁班大师，智商二百五");
+        Hero h9 = new Hero(9, "鲁班七号", HeroType.MARKSMAN, 3, "鲁班大师智商二百五");
         dm.addHero(h9);
         adminService.addEquipmentToHero(9, 2);  // 无尽战刃
         adminService.addEquipmentToHero(9, 6);  // 闪电匕首
@@ -215,7 +215,7 @@ public class DataInitializer {
         adminService.addEquipmentToHero(11, 7); // 不祥征兆
         adminService.addEquipmentToHero(11, 12); // 贤者的庇护
 
-        Hero h12 = new Hero(12, "程咬金", HeroType.TANK, 3, "一个字，干！");
+        Hero h12 = new Hero(12, "程咬金", HeroType.TANK, 3, "一个字干！");
         dm.addHero(h12);
         adminService.addEquipmentToHero(12, 10); // 红莲斗篷
         adminService.addEquipmentToHero(12, 7);  // 不祥征兆
@@ -232,7 +232,7 @@ public class DataInitializer {
         adminService.addEquipmentToHero(14, 5);  // 暗影战斧
         adminService.addEquipmentToHero(14, 7);  // 不祥征兆
 
-        // 辅助
+        // 刺客
         Hero h15 = new Hero(15, "兰陵王", HeroType.ASSASSIN, 6, "暗夜中的猎手");
         dm.addHero(h15);
         adminService.addEquipmentToHero(15, 1);  // 破军
@@ -378,8 +378,8 @@ public class DataInitializer {
     }
 
     /**
-     * 模拟每个玩家的比赛数据，让胜率真实有意义。
-     * 各队明星选手场次多、胜率高，替补选手场次少。
+     * 模拟每个玩家的比赛数据让胜率真实有意义。
+     * 各队明星选手场次多、胜率高替补选手场次少。
      */
     private static void simulatePlayerStats(GameDataManager dm) {
         // AG (teamId=1): 梦泪(8场5胜), 一诺(6场4胜), 长生(4场2胜), Cat(7场4胜)
@@ -404,8 +404,8 @@ public class DataInitializer {
     }
 
     /**
-     * 帮一个玩家模拟 total 场比赛，其中前 winCount 场为胜。
-     * incrementMatch(true) 会让 totalMatches 和 wins 各自累加，并自动重算 winRate。
+     * 帮一个玩家模拟 total 场比赛其中前 winCount 场为胜。
+     * incrementMatch(true) 会让 totalMatches 和 wins 各自累加并自动重算 winRate。
      */
     private static void simulateStats(GameDataManager dm, int playerId, int total, int winCount) {
         Player p = dm.findPlayerById(playerId);

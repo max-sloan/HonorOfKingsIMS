@@ -8,7 +8,7 @@ import java.util.List;
  * Player —— 玩家类，继承 Person
  *
  * "继承"（Inheritance）用 extends 关键字。
- * Player 自动拥有 Person 的 id, name, passwordHash 属性和所有方法。
+ * Player 自动拥有 Person 的 id, name, password 属性和所有方法。
  * 同时实现了 Reportable 接口。
  *
  * Player 通过 "teamId" 和 "heroIdList" 与其他类关联，

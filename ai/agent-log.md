@@ -91,6 +91,40 @@
 
 **Human decision**: 选择 B（修改战队和玩家数据），然后选择 A（确认）。确认后进入 Main.java 阶段。
 
+**Related commits**: `1da742f`, `f2435d7`
+
+---
+
+## Testing/Reviewer Agent（测试审查）
+
+### Checkpoint 7: 代码审查与 Bug 修复
+
+**Main contribution**:
+- 审查了全部 21 个 Java 文件，发现 20 个问题（3 critical, 6 logic, 2 file I/O 等）
+- 关键发现：英雄描述含中文逗号导致 CSV 崩溃（7/15 英雄受影响）
+- 关键发现：比赛记录未排序、"最近N场"顺序错误
+- 关键发现：加载数据后未登出导致旧用户引用失效
+- 文档错误：Player.java 注释仍写 passwordHash, 兰陵王标注为辅助
+
+**Human decision**: 接受审查结果，修复了关键 Bug（逗号→空格、比赛排序、加载时自动登出、注释修正），次要问题记录为已知限制。
+
+**Related commits**: `7963ef0`, 最终提交
+
+---
+
+## Project Manager Agent（项目经理）
+
+### Checkpoint 7: 最终文档与项目收尾
+
+**Main contribution**:
+- 写了 14 个测试用例（docs/test-cases.md），全部通过
+- 写了 10 问反思（ai/reflection.md）
+- 写了 README.md
+- 生成了 git-history.txt（6 次提交）
+- 完成全部 7 个 Checkpoint
+
+**Human decision**: TODO(HUMAN)
+
 **Related commits**: TODO(HUMAN)
 
 ---
