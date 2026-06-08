@@ -527,3 +527,57 @@ public interface Reportable {
               │   data/*.csv          │
               └───────────────────────┘
 ```
+
+---
+
+## 10. Sequence Diagram（时序图）—— 玩家查询流程
+
+```
+用户输入 "梦泪"
+     │
+     ▼
+Main.doPlayerLookup()
+     │
+     ├─ InputHelper.readNonEmptyString("关键词: ")
+     │       │
+     │       └─> 返回 "梦泪"
+     │
+     ├─ searchService.searchPlayers("梦泪")
+     │       │
+     │       └─> GameDataManager.findPlayersByName("梦泪")
+     │               │
+     │               ├─ 遍历 playerMap.values()
+     │               ├─ 每个 Player.getName() 做 contains("梦泪")
+     │               │
+     │               └─> 返回 List<Player> [梦泪(ID=1)]
+     │
+     ├─ 打印: "找到 1 人: 梦泪 Lv.28 胜率62.5%"
+     │
+     ├─ InputHelper.readIntOrDefault("ID看详情: ", 0)
+     │       │
+     │       └─> 返回 1
+     │
+     └─ searchService.getPlayerFullReport(梦泪)
+             │
+             ├─ 打印: 名字、等级、胜率、战队
+             ├─ 遍历 heroIdList [1,2,3]
+             │     ├─ dm.findHeroById(1) → 李白 [刺客]
+             │     │     └─ 遍历 recommendedEquipIds [1,2,18]
+             │     │           ├─ dm.findEquipmentById(1) → 破军
+             │     │           ├─ dm.findEquipmentById(2) → 无尽战刃
+             │     │           └─ dm.findEquipmentById(18) → 冷静之靴
+             │     ├─ dm.findHeroById(2) → 韩信 [刺客]
+             │     └─ dm.findHeroById(3) → 孙悟空 [刺客]
+             │
+             └─> 返回完整报告字符串
+```
+
+### 时序图关键点
+
+| 步骤 | 说明 |
+|------|------|
+| 1. 用户输入 | InputHelper 读取并校验非空 |
+| 2. 模糊搜索 | 遍历 HashMap 的 values()，contains() 匹配 |
+| 3. ID 查找 | HashMap.get(id) - O(1) 时间复杂度 |
+| 4. 级联查询 | 通过 heroIdList → 查 Hero → 通过 recommendedEquipIds → 查 Equipment |
+| 5. 报告生成 | SearchService 组装所有信息为字符串 |
