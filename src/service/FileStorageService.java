@@ -35,15 +35,35 @@ public class FileStorageService {
     /**
      * 加载全部数据（会覆盖内存中的现有数据）
      */
-    public void loadAll(GameDataManager dm) throws IOException {
-        // 按依赖顺序加载
-        loadEquipment(dm);
-        loadHeroes(dm);
-        loadTeams(dm);
-        loadPlayers(dm);
-        loadMatches(dm);
+    /**
+     * 检查 data/ 文件夹中是否已有保存的数据
+     */
+    public boolean dataExists() {
+        File dir = new File(DATA_DIR);
+        if (!dir.exists() || !dir.isDirectory()) return false;
+        String[] files = dir.list();
+        return files != null && files.length > 0;
+    }
 
-        System.out.println("[成功] 数据已从 " + DATA_DIR + "/ 文件夹加载");
+    public void loadAll(GameDataManager dm) throws IOException {
+        File dir = new File(DATA_DIR);
+        if (!dir.exists() || !dir.isDirectory()) {
+            System.out.println("[错误] data/ 文件夹不存在，请先保存数据");
+            return;
+        }
+        // 按依赖顺序加载
+        int loaded = 0;
+        if (loadEquipment(dm)) loaded++;
+        if (loadHeroes(dm)) loaded++;
+        if (loadTeams(dm)) loaded++;
+        if (loadPlayers(dm)) loaded++;
+        if (loadMatches(dm)) loaded++;
+
+        if (loaded > 0) {
+            System.out.println("[成功] 已从 data/ 文件夹加载 " + loaded + " 类数据");
+        } else {
+            System.out.println("[错误] data/ 文件夹为空，请先保存数据");
+        }
     }
 
     // ============================================
@@ -124,9 +144,9 @@ public class FileStorageService {
     //  加载
     // ============================================
 
-    private void loadEquipment(GameDataManager dm) throws IOException {
+    private boolean loadEquipment(GameDataManager dm) throws IOException {
         File file = new File(DATA_DIR + "/equipment.csv");
-        if (!file.exists()) return;
+        if (!file.exists()) return false;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             br.readLine(); // 跳过标题
@@ -155,11 +175,12 @@ public class FileStorageService {
             }
         }
         System.out.println("  [加载] 装备完成");
+        return true;
     }
 
-    private void loadHeroes(GameDataManager dm) throws IOException {
+    private boolean loadHeroes(GameDataManager dm) throws IOException {
         File file = new File(DATA_DIR + "/heroes.csv");
-        if (!file.exists()) return;
+        if (!file.exists()) return false;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             br.readLine();
@@ -181,11 +202,12 @@ public class FileStorageService {
             }
         }
         System.out.println("  [加载] 英雄完成");
+        return true;
     }
 
-    private void loadTeams(GameDataManager dm) throws IOException {
+    private boolean loadTeams(GameDataManager dm) throws IOException {
         File file = new File(DATA_DIR + "/teams.csv");
-        if (!file.exists()) return;
+        if (!file.exists()) return false;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             br.readLine();
@@ -211,6 +233,7 @@ public class FileStorageService {
             }
         }
         System.out.println("  [加载] 战队完成");
+        return true;
     }
 
     /**
@@ -219,9 +242,9 @@ public class FileStorageService {
      * CSV 格式:
      * id,name,password,level,rankScore,totalMatches,wins,winRate,teamId,teamName,heroIds
      */
-    private void loadPlayers(GameDataManager dm) throws IOException {
+    private boolean loadPlayers(GameDataManager dm) throws IOException {
         File file = new File(DATA_DIR + "/players.csv");
-        if (!file.exists()) return;
+        if (!file.exists()) return false;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             br.readLine(); // 跳过标题
@@ -257,11 +280,12 @@ public class FileStorageService {
             }
         }
         System.out.println("  [加载] 玩家完成");
+        return true;
     }
 
-    private void loadMatches(GameDataManager dm) throws IOException {
+    private boolean loadMatches(GameDataManager dm) throws IOException {
         File file = new File(DATA_DIR + "/matches.csv");
-        if (!file.exists()) return;
+        if (!file.exists()) return false;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             br.readLine();
@@ -282,5 +306,6 @@ public class FileStorageService {
             }
         }
         System.out.println("  [加载] 比赛记录完成");
+        return true;
     }
 }

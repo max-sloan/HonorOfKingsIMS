@@ -382,6 +382,11 @@ public class Main {
 
     private static void doLoadData() {
         System.out.println("\n===== 加载数据 =====");
+        if (!fileService.dataExists()) {
+            System.out.println("[提示] data/ 文件夹还没有数据，请先保存");
+            InputHelper.waitForEnter();
+            return;
+        }
         System.out.println("[警告] 加载会覆盖当前内存中的数据！");
         String confirm = InputHelper.readLine("输入 yes 确认: ");
         if (!"yes".equalsIgnoreCase(confirm)) {
