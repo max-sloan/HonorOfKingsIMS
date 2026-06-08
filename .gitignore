@@ -1,0 +1,11 @@
+# 编译输出
+out/
+
+# IDE
+.vscode/
+.idea/
+*.class
+
+# 系统文件
+Thumbs.db
+desktop.ini
