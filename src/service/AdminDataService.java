@@ -55,13 +55,32 @@ public class AdminDataService {
         MatchRecord m = new MatchRecord(id, teamAId, teamBId, result, winningTeamId, duration, matchTime);
         dm.addMatchRecord(m);
 
-        // 比赛记录也要加到两支队伍的列表里
+        // 比赛记录加到两支队伍的列表里
         Team teamA = dm.findTeamById(teamAId);
         Team teamB = dm.findTeamById(teamBId);
         if (teamA != null) teamA.addMatchRecord(id);
         if (teamB != null) teamB.addMatchRecord(id);
 
+        // 更新队员战绩：双方队员的 totalMatches 都 +1
+        // 获胜方队员的 wins 也 +1
+        updatePlayerStats(dm, teamA, result == MatchResult.TEAM_A_WIN);
+        updatePlayerStats(dm, teamB, result == MatchResult.TEAM_B_WIN);
+
         return m;
+    }
+
+    /**
+     * 更新战队所有队员的战绩
+     * @param isWinner 这支队伍是否赢了
+     */
+    private void updatePlayerStats(GameDataManager dm, Team team, boolean isWinner) {
+        if (team == null) return;
+        for (int playerId : team.getPlayerIds()) {
+            Player p = dm.findPlayerById(playerId);
+            if (p != null) {
+                p.incrementMatch(isWinner);
+            }
+        }
     }
 
     // ============================================
