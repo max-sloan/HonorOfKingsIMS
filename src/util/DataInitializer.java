@@ -151,7 +151,7 @@ public class DataInitializer {
         adminService.addEquipmentToHero(2, 4);
         adminService.addEquipmentToHero(2, 20);
 
-        Hero h3 = new Hero(3, "Sun Wukong", HeroType.ASSASSIN, 6, "The Great Sage Equal to Heaven");
+        Hero h3 = new Hero(3, "Sun Wukong", HeroType.ASSASSIN, 6, "The Great Sage Equal to Heaven - one strike to the soul");
         dm.addHero(h3);
         adminService.addEquipmentToHero(3, 2);
         adminService.addEquipmentToHero(3, 6);
@@ -188,7 +188,7 @@ public class DataInitializer {
         adminService.addEquipmentToHero(8, 18);
 
         // Marksmen
-        Hero h9 = new Hero(9, "Luban No.7", HeroType.MARKSMAN, 3, "Master Luban IQ 250");
+        Hero h9 = new Hero(9, "Luban No.7", HeroType.MARKSMAN, 3, "Master Luban - IQ 250");
         dm.addHero(h9);
         adminService.addEquipmentToHero(9, 2);
         adminService.addEquipmentToHero(9, 6);

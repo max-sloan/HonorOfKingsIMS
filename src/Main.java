@@ -104,7 +104,7 @@ public class Main {
                 case 6: doLeaderboard(); break;
                 case 7: doDataManagement(); break;
                 case 8: doSaveData(); break;
-                case 0: auth.logout(); System.out.println("[Logged out]"); return;
+                case 0: auth.logout(); System.out.println("[Logged Out]"); return;
             }
         }
     }
@@ -134,7 +134,7 @@ public class Main {
                 case 6: doLeaderboard(); break;
                 case 7: doViewMyHeroes(); break;
                 case 8: doEditMyInfo(); break;
-                case 0: auth.logout(); System.out.println("[Logged out]"); return;
+                case 0: auth.logout(); System.out.println("[Logged Out]"); return;
             }
         }
     }
