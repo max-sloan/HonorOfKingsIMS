@@ -581,3 +581,26 @@ Main.doPlayerLookup()
 | 3. ID 查找 | HashMap.get(id) - O(1) 时间复杂度 |
 | 4. 级联查询 | 通过 heroIdList → 查 Hero → 通过 recommendedEquipIds → 查 Equipment |
 | 5. 报告生成 | SearchService 组装所有信息为字符串 |
+
+---
+
+## 11. Class Responsibility Summary
+
+| Class | Layer | Responsibility | Key Java Concept |
+|-------|-------|---------------|-----------------|
+| Person | Model | Shared fields for all system users | Abstract class, Encapsulation |
+| Player | Model | Game player with stats and hero collection | Inheritance, ID references |
+| Admin | Model | Administrator with data management permissions | instanceof, Inheritance |
+| Hero | Model | Playable character with type and equipment | Interface implementation |
+| Equipment | Model | Item with attribute bonuses (HashMap) | HashMap, Encapsulation |
+| Team | Model | Team containing players and match history | Multiple interfaces, Aggregation |
+| MatchRecord | Model | Immutable match result record | Immutability, No-setters design |
+| GameDataManager | Service | Central data store (Singleton) | Singleton, HashMap, Cascade |
+| AuthenticationService | Service | Login/logout with role checking | Polymorphism, instanceof |
+| SearchService | Service | Fuzzy search and full report generation | Collections traversal |
+| RankingService | Service | Leaderboard sorting with tie-break | Comparator, Lambda |
+| AdminDataService | Service | Admin CRUD with cascade updates | Exception handling, Cascade logic |
+| FileStorageService | Service | CSV save/load persistence | File I/O, try-with-resources |
+| InputHelper | Util | Console input with validation | Static methods, try-catch |
+| DataInitializer | Util | Hardcoded dataset creation | Dependency order, Data seeding |
+| Main | Entry | Menu routing and user interaction | while-switch loop, Control flow |
