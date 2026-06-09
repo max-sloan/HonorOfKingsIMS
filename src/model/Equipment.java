@@ -6,55 +6,43 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Equipment —— 装备类
+ * Equipment class
  *
- * 使用 HashMap<String, Integer> 来存属性加成。
- * 例如：{"攻击力": 80, "攻速": 20, "暴击率": 15}
+ * Uses HashMap<String, Integer> to store attribute bonuses.
+ * e.g. {"Attack": 80, "Attack Speed": 20, "Crit Rate": 15}
  *
- * HashMap 讲解：
- * - 格式：Map<键的类型, 值的类型>
- * - put(key, value) → 存入一对数据
- * - get(key) → 取出对应的值
- * - 和 ArrayList 的区别：ArrayList 用数字下标找元素，HashMap 用自定义的 key 找元素
+ * HashMap:
+ * - Format: Map<KeyType, ValueType>
+ * - put(key, value) - store a pair
+ * - get(key) - retrieve by key
+ * - Unlike ArrayList which uses numeric index, HashMap uses custom keys
  */
 public class Equipment implements Identifiable {
     private int id;
     private String name;
     private EquipmentType equipType;
     private int price;
-
-    // 属性加成表：属性名 → 属性值
-    // 例如: "攻击力" → 80, "冷却缩减" → 10
     private Map<String, Integer> attributeMap;
-
-    private int usageCount;  // 被推荐次数（排行榜用）
+    private int usageCount;
 
     public Equipment(int id, String name, EquipmentType equipType, int price) {
         this.id = id;
         this.name = name;
         this.equipType = equipType;
         this.price = price;
-        this.attributeMap = new HashMap<>();  // 创建空的 HashMap
+        this.attributeMap = new HashMap<>();
         this.usageCount = 0;
     }
 
-    /**
-     * 添加一条属性加成
-     * @param key   属性名，如 "攻击力"
-     * @param value 属性值，如 80
-     */
     public void addAttribute(String key, int value) {
-        attributeMap.put(key, value);  // HashMap 的 put 方法
+        attributeMap.put(key, value);
     }
 
-    /**
-     * 使用次数 +1（每当有英雄推荐此装备时调用）
-     */
+    /** Increment when a hero recommends this equipment */
     public void incrementUsage() {
         this.usageCount++;
     }
 
-    // === getter ===
     @Override
     public int getId() { return id; }
     @Override
@@ -64,20 +52,16 @@ public class Equipment implements Identifiable {
     public Map<String, Integer> getAttributeMap() { return attributeMap; }
     public int getUsageCount() { return usageCount; }
 
-    /**
-     * 打印装备详情
-     */
     public void displayInfo() {
-        System.out.println("===== 装备详情 =====");
-        System.out.println("名字: " + name);
-        System.out.println("类型: " + equipType.getDisplayName());
-        System.out.println("价格: " + price + " 金币");
-        System.out.println("属性加成:");
-        // 遍历 HashMap 的每一对键值
+        System.out.println("===== Equipment Details =====");
+        System.out.println("Name: " + name);
+        System.out.println("Type: " + equipType.getDisplayName());
+        System.out.println("Price: " + price + " gold");
+        System.out.println("Attributes:");
         for (Map.Entry<String, Integer> entry : attributeMap.entrySet()) {
             System.out.println("  " + entry.getKey() + ": +" + entry.getValue());
         }
-        System.out.println("被推荐次数: " + usageCount);
+        System.out.println("Times Recommended: " + usageCount);
     }
 
     @Override

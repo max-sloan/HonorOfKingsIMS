@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * SearchService —— 搜索服务
- *
- * 封装所有的查询逻辑。
- * 每个搜索方法都返回一个列表（可能为空），调用方再决定如何显示。
+ * SearchService - handles all search/query logic
  */
 public class SearchService {
     private GameDataManager dm;
@@ -17,59 +14,35 @@ public class SearchService {
         this.dm = GameDataManager.getInstance();
     }
 
-    /**
-     * 按名字搜索玩家（模糊匹配）
-     */
     public List<Player> searchPlayers(String keyword) {
         return dm.findPlayersByName(keyword);
     }
 
-    /**
-     * 按ID搜索玩家（精确匹配）
-     */
     public Player searchPlayerById(int id) {
         return dm.findPlayerById(id);
     }
 
-    /**
-     * 按名字搜索战队
-     */
     public List<Team> searchTeams(String keyword) {
         return dm.findTeamsByName(keyword);
     }
 
-    /**
-     * 按ID搜索战队
-     */
     public Team searchTeamById(int id) {
         return dm.findTeamById(id);
     }
 
-    /**
-     * 按名字搜索英雄
-     */
     public List<Hero> searchHeroes(String keyword) {
         return dm.findHeroesByName(keyword);
     }
 
-    /**
-     * 按ID搜索英雄
-     */
     public Hero searchHeroById(int id) {
         return dm.findHeroById(id);
     }
 
-    /**
-     * 按名字搜索装备
-     */
     public List<Equipment> searchEquipment(String keyword) {
         return dm.findEquipmentByName(keyword);
     }
 
-    /**
-     * 获取拥有某个英雄的所有玩家
-     * 遍历所有玩家，检查 heroIdList 中是否包含该英雄ID
-     */
+    /** Find all players who own a specific hero */
     public List<Player> getPlayersOwningHero(int heroId) {
         List<Player> result = new ArrayList<>();
         for (Player p : dm.getAllPlayers()) {
@@ -80,9 +53,7 @@ public class SearchService {
         return result;
     }
 
-    /**
-     * 获取某个战队的所有比赛记录
-     */
+    /** Get all matches involving a team */
     public List<MatchRecord> getTeamMatches(int teamId) {
         List<MatchRecord> result = new ArrayList<>();
         for (MatchRecord m : dm.getAllMatches()) {
@@ -93,9 +64,7 @@ public class SearchService {
         return result;
     }
 
-    /**
-     * 获取某个战队的所有成员
-     */
+    /** Get all members of a team */
     public List<Player> getTeamPlayers(int teamId) {
         List<Player> result = new ArrayList<>();
         Team team = dm.findTeamById(teamId);
@@ -110,27 +79,24 @@ public class SearchService {
         return result;
     }
 
-    /**
-     * 生成玩家完整报告（包含本类信息和拥有的英雄+装备）
-     */
+    /** Generate a full report for a player (including heroes and equipment) */
     public String getPlayerFullReport(Player player) {
         StringBuilder sb = new StringBuilder();
-        sb.append("══════ 玩家完整报告 ══════\n");
-        sb.append("名字: ").append(player.getName()).append("\n");
-        sb.append("等级: ").append(player.getLevel()).append("\n");
-        sb.append("胜率: ").append(String.format("%.1f%%", player.getWinRate())).append("\n");
-        sb.append("战队: ").append(player.getTeamName()).append("\n");
-        sb.append("\n--- 拥有的英雄 ---\n");
+        sb.append("========== Player Full Report ==========\n");
+        sb.append("Name: ").append(player.getName()).append("\n");
+        sb.append("Level: ").append(player.getLevel()).append("\n");
+        sb.append("Win Rate: ").append(String.format("%.1f%%", player.getWinRate())).append("\n");
+        sb.append("Team: ").append(player.getTeamName()).append("\n");
+        sb.append("\n--- Owned Heroes ---\n");
         for (int heroId : player.getHeroIdList()) {
             Hero hero = dm.findHeroById(heroId);
             if (hero != null) {
                 sb.append("  ").append(hero.getName())
                   .append(" [").append(hero.getHeroType().getDisplayName()).append("]\n");
-                // 显示该英雄的推荐装备
                 for (int equipId : hero.getRecommendedEquipIds()) {
                     Equipment equip = dm.findEquipmentById(equipId);
                     if (equip != null) {
-                        sb.append("    └─ ").append(equip.getName()).append("\n");
+                        sb.append("    + ").append(equip.getName()).append("\n");
                     }
                 }
             }

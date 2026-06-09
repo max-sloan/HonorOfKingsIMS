@@ -4,27 +4,22 @@ import model.*;
 import java.util.*;
 
 /**
- * GameDataManager —— 数据中心（单例模式）
+ * GameDataManager - Central data store (Singleton pattern)
  *
- * 这是整个系统的数据大脑，所有数据都存在这里的 HashMap 中。
+ * The data brain of the system. All data lives in HashMaps here.
  *
- * "单例模式"（Singleton）：
- * - 构造器是 private 的，外部不能 new
- * - 通过 getInstance() 获取唯一实例
- * - 保证整个程序只有一个数据管理器
+ * Singleton: constructor is private, only accessible via getInstance().
+ * Ensures only one data manager exists in the entire program.
  *
- * "HashMap"：
- * - Map<Integer, Player> 意思是：键=整数ID，值=Player对象
- * - put(id, player) 存入
- * - get(id) 取出（O(1) 快速查找）
- * - containsKey(id) 检查是否存在
- * - values() 获取所有值（返回 Collection）
+ * HashMap: Map<Integer, Player> means key=ID, value=Player object.
+ * - put(id, player) to store
+ * - get(id) to retrieve (O(1) fast lookup)
+ * - containsKey(id) to check existence
+ * - values() to get all values
  */
 public class GameDataManager {
-    // === 单例 ===
     private static GameDataManager instance;
 
-    // === 数据存储（6个 HashMap） ===
     private Map<Integer, Player>      playerMap;
     private Map<Integer, Admin>       adminMap;
     private Map<Integer, Hero>        heroMap;
@@ -32,14 +27,12 @@ public class GameDataManager {
     private Map<Integer, Team>        teamMap;
     private Map<Integer, MatchRecord> matchMap;
 
-    // === 自增ID ===
     private int nextPlayerId;
     private int nextHeroId;
     private int nextEquipmentId;
     private int nextTeamId;
     private int nextMatchId;
 
-    // 构造器设为 private，外部不能 new
     private GameDataManager() {
         playerMap    = new HashMap<>();
         adminMap     = new HashMap<>();
@@ -55,9 +48,6 @@ public class GameDataManager {
         nextMatchId     = 1;
     }
 
-    /**
-     * 获取单例实例
-     */
     public static GameDataManager getInstance() {
         if (instance == null) {
             instance = new GameDataManager();
@@ -65,9 +55,7 @@ public class GameDataManager {
         return instance;
     }
 
-    /**
-     * 清空所有数据（供加载前使用）
-     */
+    /** Clear all data (for reloading from file) */
     public void reset() {
         playerMap.clear();
         adminMap.clear();
@@ -82,9 +70,7 @@ public class GameDataManager {
         nextMatchId     = 1;
     }
 
-    // ============================================
-    //  Player 操作
-    // ============================================
+    // ============ Player operations ============
 
     public void addPlayer(Player player) {
         playerMap.put(player.getId(), player);
@@ -110,7 +96,6 @@ public class GameDataManager {
     public void removePlayer(int id) {
         Player p = playerMap.remove(id);
         if (p != null && p.getTeamId() != -1) {
-            // 从战队中移除该玩家
             Team team = findTeamById(p.getTeamId());
             if (team != null) {
                 team.removePlayer(id);
@@ -124,9 +109,7 @@ public class GameDataManager {
 
     public int getNextPlayerId() { return nextPlayerId++; }
 
-    // ============================================
-    //  Admin 操作
-    // ============================================
+    // ============ Admin operations ============
 
     public void addAdmin(Admin admin) {
         adminMap.put(admin.getId(), admin);
@@ -140,9 +123,7 @@ public class GameDataManager {
         return adminMap.values();
     }
 
-    // ============================================
-    //  Hero 操作
-    // ============================================
+    // ============ Hero operations ============
 
     public void addHero(Hero hero) {
         heroMap.put(hero.getId(), hero);
@@ -168,11 +149,9 @@ public class GameDataManager {
     public void removeHero(int id) {
         Hero hero = heroMap.remove(id);
         if (hero != null) {
-            // 级联清理：从所有玩家的英雄列表中移除
             for (Player p : playerMap.values()) {
                 p.removeHero(id);
             }
-            // 从所有装备中减掉使用计数（这里简化处理）
         }
     }
 
@@ -182,9 +161,7 @@ public class GameDataManager {
 
     public int getNextHeroId() { return nextHeroId++; }
 
-    // ============================================
-    //  Equipment 操作
-    // ============================================
+    // ============ Equipment operations ============
 
     public void addEquipment(Equipment equip) {
         equipmentMap.put(equip.getId(), equip);
@@ -210,7 +187,6 @@ public class GameDataManager {
     public void removeEquipment(int id) {
         Equipment equip = equipmentMap.remove(id);
         if (equip != null) {
-            // 级联清理：从所有英雄的推荐列表移除
             for (Hero h : heroMap.values()) {
                 h.getRecommendedEquipIds().remove(Integer.valueOf(id));
             }
@@ -223,9 +199,7 @@ public class GameDataManager {
 
     public int getNextEquipmentId() { return nextEquipmentId++; }
 
-    // ============================================
-    //  Team 操作
-    // ============================================
+    // ============ Team operations ============
 
     public void addTeam(Team team) {
         teamMap.put(team.getId(), team);
@@ -251,12 +225,11 @@ public class GameDataManager {
     public void removeTeam(int id) {
         Team team = teamMap.remove(id);
         if (team != null) {
-            // 级联清理：所有队员的 teamId 重置为 -1
             for (int playerId : team.getPlayerIds()) {
                 Player p = findPlayerById(playerId);
                 if (p != null) {
                     p.setTeamId(-1);
-                    p.setTeamName("无战队");
+                    p.setTeamName("No Team");
                 }
             }
         }
@@ -268,9 +241,7 @@ public class GameDataManager {
 
     public int getNextTeamId() { return nextTeamId++; }
 
-    // ============================================
-    //  MatchRecord 操作
-    // ============================================
+    // ============ MatchRecord operations ============
 
     public void addMatchRecord(MatchRecord match) {
         matchMap.put(match.getId(), match);
@@ -286,7 +257,6 @@ public class GameDataManager {
     public void removeMatchRecord(int id) {
         MatchRecord match = matchMap.remove(id);
         if (match != null) {
-            // 级联清理：从两支队伍的记录列表移除
             Team teamA = findTeamById(match.getTeamAId());
             Team teamB = findTeamById(match.getTeamBId());
             if (teamA != null) teamA.getMatchRecordIds().remove(Integer.valueOf(id));
@@ -300,34 +270,20 @@ public class GameDataManager {
 
     public int getNextMatchId() { return nextMatchId++; }
 
-    // ============================================
-    //  通用方法
-    // ============================================
+    // ============ Utility ============
 
-    /**
-     * 检查玩家是否存在
-     */
     public boolean playerExists(int id) {
         return playerMap.containsKey(id);
     }
 
-    /**
-     * 检查英雄是否存在
-     */
     public boolean heroExists(int id) {
         return heroMap.containsKey(id);
     }
 
-    /**
-     * 检查装备是否存在
-     */
     public boolean equipmentExists(int id) {
         return equipmentMap.containsKey(id);
     }
 
-    /**
-     * 检查战队是否存在
-     */
     public boolean teamExists(int id) {
         return teamMap.containsKey(id);
     }

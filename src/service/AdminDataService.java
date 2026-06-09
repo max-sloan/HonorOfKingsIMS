@@ -5,10 +5,9 @@ import model.enums.*;
 import java.util.*;
 
 /**
- * AdminDataService —— 管理员数据操作服务
+ * AdminDataService - admin-only data CRUD operations
  *
- * 只有 Admin 角色可以使用这些方法。
- * 负责增删改所有类型的数据，并处理级联更新。
+ * Handles add, delete, update for all data types with cascade cleanup.
  */
 public class AdminDataService {
     private GameDataManager dm;
@@ -17,9 +16,7 @@ public class AdminDataService {
         this.dm = GameDataManager.getInstance();
     }
 
-    // ============================================
-    //  添加操作
-    // ============================================
+    // ============ Add operations ============
 
     public Player addPlayer(String name, String password, int level, int rankScore) {
         int id = dm.getNextPlayerId();
@@ -55,24 +52,20 @@ public class AdminDataService {
         MatchRecord m = new MatchRecord(id, teamAId, teamBId, result, winningTeamId, duration, matchTime);
         dm.addMatchRecord(m);
 
-        // 比赛记录加到两支队伍的列表里
+        // Add to both teams' match lists
         Team teamA = dm.findTeamById(teamAId);
         Team teamB = dm.findTeamById(teamBId);
         if (teamA != null) teamA.addMatchRecord(id);
         if (teamB != null) teamB.addMatchRecord(id);
 
-        // 更新队员战绩：双方队员的 totalMatches 都 +1
-        // 获胜方队员的 wins 也 +1
+        // Update player stats: all players get +1 match, winners get +1 win
         updatePlayerStats(dm, teamA, result == MatchResult.TEAM_A_WIN);
         updatePlayerStats(dm, teamB, result == MatchResult.TEAM_B_WIN);
 
         return m;
     }
 
-    /**
-     * 更新战队所有队员的战绩
-     * @param isWinner 这支队伍是否赢了
-     */
+    /** Update match stats for all players on a team */
     private void updatePlayerStats(GameDataManager dm, Team team, boolean isWinner) {
         if (team == null) return;
         for (int playerId : team.getPlayerIds()) {
@@ -83,9 +76,7 @@ public class AdminDataService {
         }
     }
 
-    // ============================================
-    //  删除操作（含级联清理）
-    // ============================================
+    // ============ Delete operations (with cascade) ============
 
     public boolean deletePlayer(int id) {
         if (!dm.playerExists(id)) return false;
@@ -117,9 +108,7 @@ public class AdminDataService {
         return true;
     }
 
-    // ============================================
-    //  修改操作
-    // ============================================
+    // ============ Update operations ============
 
     public boolean updatePlayerName(int id, String newName) {
         Player p = dm.findPlayerById(id);
@@ -135,22 +124,12 @@ public class AdminDataService {
         return true;
     }
 
-    public boolean updatePlayerLevel(int id, int newLevel) {
-        Player p = dm.findPlayerById(id);
-        if (p == null) return false;
-        p.setLevel(newLevel);
-        return true;
-    }
-
-    /**
-     * 将玩家加入战队
-     */
+    /** Assign a player to a team */
     public boolean assignPlayerToTeam(int playerId, int teamId) {
         Player p = dm.findPlayerById(playerId);
         Team t = dm.findTeamById(teamId);
         if (p == null || t == null) return false;
 
-        // 如果玩家已经有战队，先从旧战队移除
         if (p.getTeamId() != -1) {
             Team oldTeam = dm.findTeamById(p.getTeamId());
             if (oldTeam != null) oldTeam.removePlayer(playerId);
@@ -162,22 +141,18 @@ public class AdminDataService {
         return true;
     }
 
-    /**
-     * 为英雄添加推荐装备
-     */
+    /** Add recommended equipment to a hero */
     public boolean addEquipmentToHero(int heroId, int equipId) {
         Hero hero = dm.findHeroById(heroId);
         Equipment equip = dm.findEquipmentById(equipId);
         if (hero == null || equip == null) return false;
 
         hero.addEquipment(equipId);
-        equip.incrementUsage();  // 装备被推荐次数+1
+        equip.incrementUsage();
         return true;
     }
 
-    /**
-     * 给玩家添加英雄
-     */
+    /** Give a hero to a player */
     public boolean addHeroToPlayer(int playerId, int heroId) {
         Player p = dm.findPlayerById(playerId);
         if (p == null || !dm.heroExists(heroId)) return false;

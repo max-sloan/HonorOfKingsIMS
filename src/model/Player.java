@@ -5,49 +5,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Player —— 玩家类，继承 Person
+ * Player class, extends Person
  *
- * "继承"（Inheritance）用 extends 关键字。
- * Player 自动拥有 Person 的 id, name, password 属性和所有方法。
- * 同时实现了 Reportable 接口。
+ * Inheritance uses the extends keyword.
+ * Player automatically inherits Person's id, name, password fields and methods.
+ * Also implements the Reportable interface.
  *
- * Player 通过 "teamId" 和 "heroIdList" 与其他类关联，
- * 而不是直接持有 Team 或 Hero 对象——这叫"ID引用"。
- * 好处：避免循环引用，数据查找通过 GameDataManager 完成。
+ * Uses "ID references" - teamId and heroIdList store IDs, not object references.
+ * Benefits: avoids circular references, data lookup via GameDataManager.
  */
 public class Player extends Person implements Reportable {
-    private int level;                  // 等级 (1-30)
-    private int rankScore;              // 排位积分
-    private int totalMatches;           // 总比赛场次
-    private int wins;                   // 胜场数
-    private double winRate;             // 个人胜率（百分比，0.0~100.0）
-    private int teamId;                 // 所属战队ID（-1表示无战队）
-    private String teamName;            // 所属战队名（用于显示）
-    private List<Integer> heroIdList;   // 拥有的英雄ID列表
+    private int level;
+    private int rankScore;
+    private int totalMatches;
+    private int wins;
+    private double winRate;
+    private int teamId;
+    private String teamName;
+    private List<Integer> heroIdList;
 
     public Player(int id, String name, String password, int level, int rankScore) {
-        super(id, name, password);      // super() 调用父类 Person 的构造器
+        super(id, name, password);
         this.level = level;
         this.rankScore = rankScore;
         this.totalMatches = 0;
         this.wins = 0;
         this.winRate = 0.0;
-        this.teamId = -1;               // 默认无战队
-        this.teamName = "无战队";
+        this.teamId = -1;
+        this.teamName = "No Team";
         this.heroIdList = new ArrayList<>();
     }
 
-    /**
-     * 获取个人胜率（已计算好的值）
-     * @return 胜率百分比
-     */
+    /** Get stored win rate */
     public double getWinRate() {
         return winRate;
     }
 
-    /**
-     * 重新计算胜率，在比赛数据更新后调用
-     */
+    /** Recalculate win rate after stats change */
     public void updateWinRate() {
         if (totalMatches == 0) {
             this.winRate = 0.0;
@@ -56,19 +50,16 @@ public class Player extends Person implements Reportable {
         }
     }
 
-    /**
-     * 比赛后更新统计（自动重算胜率）
-     * @param isWin 是否赢了
-     */
+    /** Update stats after a match, auto-recalculate win rate */
     public void incrementMatch(boolean isWin) {
         this.totalMatches++;
         if (isWin) {
             this.wins++;
         }
-        updateWinRate();  // 自动重新计算胜率
+        updateWinRate();
     }
 
-    // === 英雄管理 ===
+    // Hero management
     public void addHero(int heroId) {
         if (!heroIdList.contains(heroId)) {
             heroIdList.add(heroId);
@@ -79,7 +70,7 @@ public class Player extends Person implements Reportable {
         heroIdList.remove(Integer.valueOf(heroId));
     }
 
-    // === getter/setter ===
+    // Getters and setters
     public int getLevel() { return level; }
     public void setLevel(int level) { this.level = level; }
 
@@ -101,23 +92,22 @@ public class Player extends Person implements Reportable {
         return heroIdList;
     }
 
-    // === 覆盖父类方法 ===
     @Override
     public void displayInfo() {
-        System.out.println("===== 玩家信息 =====");
+        System.out.println("===== Player Info =====");
         System.out.println("ID: " + getId());
-        System.out.println("名字: " + getName());
-        System.out.println("等级: " + level);
-        System.out.println("排位分: " + rankScore);
-        System.out.println("胜率: " + String.format("%.1f%%", getWinRate()));
-        System.out.println("总场次: " + totalMatches + " | 胜场: " + wins);
-        System.out.println("拥有英雄数: " + heroIdList.size());
-        System.out.println("战队: " + teamName);
+        System.out.println("Name: " + getName());
+        System.out.println("Level: " + level);
+        System.out.println("Rank Score: " + rankScore);
+        System.out.println("Win Rate: " + String.format("%.1f%%", getWinRate()));
+        System.out.println("Matches: " + totalMatches + " | Wins: " + wins);
+        System.out.println("Heroes Owned: " + heroIdList.size());
+        System.out.println("Team: " + teamName);
     }
 
     @Override
     public String generateReport() {
-        return getName() + " Lv." + level + " 胜率" + String.format("%.1f%%", getWinRate());
+        return getName() + " Lv." + level + " WR:" + String.format("%.1f%%", getWinRate());
     }
 
     @Override

@@ -1,15 +1,15 @@
 package model.enums;
 
 /**
- * 装备类型枚举
+ * Equipment type enum
  */
 public enum EquipmentType {
-    ATTACK("攻击装"),
-    DEFENSE("防御装"),
-    MOVEMENT("移动装"),
-    MAGIC("法术装"),
-    JUNGLE("打野装"),
-    SUPPORT("辅助装");
+    ATTACK("Attack"),
+    DEFENSE("Defense"),
+    MOVEMENT("Movement"),
+    MAGIC("Magic"),
+    JUNGLE("Jungle"),
+    SUPPORT("Support");
 
     private final String displayName;
 

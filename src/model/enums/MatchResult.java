@@ -1,12 +1,12 @@
 package model.enums;
 
 /**
- * 比赛结果枚举
+ * Match result enum
  */
 public enum MatchResult {
-    TEAM_A_WIN("队伍A获胜"),
-    TEAM_B_WIN("队伍B获胜"),
-    DRAW("平局");
+    TEAM_A_WIN("Team A Wins"),
+    TEAM_B_WIN("Team B Wins"),
+    DRAW("Draw");
 
     private final String displayName;
 
