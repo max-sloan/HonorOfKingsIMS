@@ -33,6 +33,7 @@ public class FileStorageService {
         saveEquipment(dm);
         saveTeams(dm);
         saveMatches(dm);
+        saveAdmins(dm);
 
         System.out.println("[Success] Data saved to " + DATA_DIR + "/");
     }
@@ -49,6 +50,7 @@ public class FileStorageService {
         if (loadTeams(dm)) loaded++;
         if (loadPlayers(dm)) loaded++;
         if (loadMatches(dm)) loaded++;
+        if (loadAdmins(dm)) loaded++;
 
         if (loaded > 0) {
             System.out.println("[Success] Loaded " + loaded + " data types from " + DATA_DIR + "/");
@@ -125,6 +127,16 @@ public class FileStorageService {
                     m.getId(), m.getTeamAId(), m.getTeamBId(),
                     m.getResult().name(), m.getWinningTeamId(),
                     m.getDuration(), m.getMatchTime());
+            }
+        }
+    }
+
+    private void saveAdmins(GameDataManager dm) throws IOException {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(DATA_DIR + "/admins.csv"))) {
+            pw.println("id,name,password,role");
+            for (Admin a : dm.getAllAdmins()) {
+                pw.printf(Locale.US, "%d,%s,%s,%s\n",
+                    a.getId(), a.getName(), a.getPassword(), a.getRole());
             }
         }
     }
@@ -276,6 +288,28 @@ public class FileStorageService {
             }
         }
         System.out.println("  [Load] Matches OK");
+        return true;
+    }
+
+    private boolean loadAdmins(GameDataManager dm) throws IOException {
+        File file = new File(DATA_DIR + "/admins.csv");
+        if (!file.exists()) return false;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            br.readLine();
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                int id = Integer.parseInt(parts[0]);
+                String name = parts[1];
+                String password = parts[2];
+                String role = parts[3];
+
+                Admin admin = new Admin(id, name, password, role);
+                dm.addAdmin(admin);
+            }
+        }
+        System.out.println("  [Load] Admins OK");
         return true;
     }
 }

@@ -1,111 +1,198 @@
 # AI Prompts Record
 
-> 记录本项目中使用AI工具的所有重要提示词及响应。
+## Prompt 01 — Project Reset and Structure Init
 
----
+* **Time**:Jun 8th,2026
+* **Tool/Model**: Cherry + deepseekv4
+* **Agent Role**: Project Manager Agent
+* **Related Commit**:1da742f [AI-Implementation] implement model classes, service layer, and Main menu
 
-## Prompt 01 — 项目重置与结构初始化
+### My Prompt
+Because of my fault, I make my project become miss and I don't know how to continue my project. So I decide to use the Agent to help me to manage my project. With the AI help, I build the main body of my project and I sent the first commit.
 
-* **Time**: TODO(HUMAN)
+### AI Response Summary
+
+AI confirmed folder path C:\Users\wangye\Desktop\HonorOfKingsIMS, then: deleted old content, recreated directory structure (src/model, src/service, src/util, docs, ai), created placeholder files, initialized Git. AI built the main structor of my project.
+
+### My Decision
+
+Accepted the AI's suggestions. Confirmed path and agreed to delete and rebuild the main body of my project and sent the first commit.
+
+### My Manual Change
+
+None.
+
+
+
+## Prompt 02 — Architecture Design and plan.md Draft
+
+* **Time**:Jun 8th,2026
+* **Tool/Model**: Cherry + DeepseekV4 (Architect Agent)
+* **Agent Role**: Architect Agent
+* **Related Commit**:1da742f [AI-Implementation] implement model classes, service layer, and Main menu
+                     a616f59 [AI-Implementation] complete file I/O: save and load data via CSV
+
+### My Prompt
+
+"You are a Java OOP architect. Please provide an architecture analysis report for the Honor of Kings IMS project. Include class relationships, interface design, enum design, data flow, architecture recommendations, and beginner tips."
+
+### AI Response Summary
+
+Architect Agent provided a complete analysis: Person->Player/Admin inheritance, ID reference design, Identifiable + Reportable interfaces, 3 enums, 4-layer architecture (UI -> Service -> GameDataManager -> FileStorage), 6 service classes, CSV format, beginner pitfalls list, data build order.
+
+### My Decision
+
+Accepted (Option A). First time seeing HashMap concept. AI explained HashMap as key-value pairs with O(1) lookup. Previously only knew ArrayList. Understanding why HashMap is faster than List traversal for data center lookups.
+
+### My Manual Change
+
+None.
+
+
+## Prompt 03 — Class Design Finalization (Checkpoint 2)
+
+* **Time**:Jun 9th,2026
+* **Tool/Model**: Cherry + Claude (Project Manager Agent)
+* **Agent Role**: Project Manager Agent
+* **Related Commit**:aae9a6 [AI-Architect] add sequence diagram for player lookup flow
+
+### My Prompt
+
+(Auto-generated: PM Agent generated design.md and presented Checkpoint 2)
+
+### AI Response Summary
+
+PM Agent generated complete design.md: 3 enums, 2 interfaces, 7 model classes, 6 service classes, HashMap and Singleton explanations, menu structure design for Admin/Player dual roles.
+
+### My Decision
+
+Accepted (Option A). Approved all class design, proceed to code.
+
+### My Manual Change
+
+None.
+
+
+
+## Prompt 04 — Checkpoint 3: Player class modifications
+
+* **Time**:Jun 8th,2026
 * **Tool/Model**: Cherry + Claude
-* **Agent Role**: Project Manager Agent（项目经理）
-* **Related Commit**: `acc907d`
+* **Agent Role**: Project Manager Agent
 
 ### My Prompt
 
-```
-RESET AND OVERWRITE EXISTING PROJECT.
-I want you to restart my Java coursework project from zero and overwrite the existing project folder.
-...
-[完整的重置指令，包括删除旧项目、重建目录结构、Git初始化等]
-```
+"I choose B. Add personal win rate field and team name field to Player class."
 
 ### AI Response Summary
 
-AI 首先确认了项目文件夹路径 `C:\Users\wangye\Desktop\HonorOfKingsIMS`，等待用户确认后执行了以下操作：
-1. 由于文件夹被进程锁定，先清空了旧项目内容
-2. 重新创建了完整的目录结构（src/model, src/service, src/util, docs, ai）
-3. 创建了所有占位文件（Main.java, design.md, test-cases.md, prompts.md, agent-log.md, reflection.md, plan.md, README.md, git-history.txt）
-4. 初始化 Git 仓库
-5. 完成第一次提交：`[Human] reset project and create clean initial structure`
+Added winRate (double) and teamName (String) fields to Player.java. Added updateWinRate() method, updated incrementMatch() to auto-recalculate, updated displayInfo() to show team name.
 
 ### My Decision
 
-接受。确认路径正确，同意删除旧项目并重建。
+Accepted modifications, then confirmed to proceed to Service layer.
 
 ### My Manual Change
 
-无。
+None.
+
+
+## Prompt 05 — Checkpoint 4: Dataset modification
+
+* **Time**:Jun 8th,2026
+* **Tool/Model**: Cherry + Claude
+* **Agent Role**: Project Manager Agent
+* **Related Commit**:f2435d7 [Human] fix menu alignment and add player win rate simulation
+
+### My Prompt
+
+"I choose B. Change team names to AG, Wolves, eStar, and change players to famous KPL players from these teams."
+
+### AI Response Summary
+
+Updated team names to AG, Wolves, eStar and all 12 players to real KPL players (MengLei/YiNuo/ChangSheng/Cat, Fly/YaoDao/XiaoPang/XiangYu, HuaHai/QingRong/TanRan/ZiYang).
+
+### My Decision
+
+Accepted, then confirmed Service layer.
+
+### My Manual Change
+I need more suitable Service layer so that the users can use this project more comfortable.
 
 ---
 
-## Prompt 02 — 架构设计与 plan.md 起草
 
-* **Time**: TODO(HUMAN)
-* **Tool/Model**: Cherry + Claude（Architect Agent）
-* **Agent Role**: Architect Agent（架构师）
+
+## Prompt 06 — Code Review and Bug Fixes
+
+* **Time**:Jun 9th,2026
+* **Tool/Model**: Cherry + Claude (Testing/Reviewer Agent)
+* **Agent Role**: Testing/Reviewer Agent
+* **Related Commit**:2ed3a22 [AI-Review] bug fixes from code review + final documentation
+
+### My Prompt
+
+"Review all 21 Java files. Find bugs, logic issues, OOP design problems, collection issues, exception handling gaps, file I/O issues."
+
+### AI Response Summary
+
+Found 20 issues (3 critical, 6 logic, 2 file I/O, etc.). Key findings: hero descriptions with Chinese commas crash CSV parsing, match history unsorted, orphaned user after data load, wrong javadoc comments.
+
+### My Decision
+
+Accepted review, fixed critical bugs (commas->spaces, match sorting, auto-logout on load, comment fixes). Minor issues recorded as known limitations.
+
+### My Manual Change
+
+Fixed comma issues in hero descriptions, sorted matches by time, added auth.logout() before data load.
+
+
+## Prompt 07 — Project Review and Data Consistency Fix
+
+* **Time**: Jun 12th, 2026
+* **Tool/Model**: Cherry + DeepSeek (Project Manager Agent)
+* **Agent Role**: Project Manager Agent
 * **Related Commit**: TODO(HUMAN)
 
 ### My Prompt
 
-```
-你是一位 Java OOP 架构师。请为以下王者荣耀信息管理系统项目提供架构分析报告。
-[包含完整的项目需求、必选类、必用概念、数据集要求、功能模块等]
-请提供：类关系分析、接口设计建议、枚举设计、数据流设计、架构建议、初学者注意事项。
-```
+"I hope you can check whether the contents of my HonorOfKingsIMS folder meet the requirements. If there are any non-compliant parts, stop first and ask me before making changes."
 
 ### AI Response Summary
 
-Architect Agent 提供了一份完整的架构分析报告，包括：
-1. 类关系分析：Person→Player/Admin 两层继承，实体类通过 ID 引用关联
-2. 接口设计：建议 Identifiable + Reportable 两个接口
-3. 枚举设计：HeroType, EquipmentType, MatchResult
-4. 数据流：四层架构 UI → Service → GameDataManager → FileStorageService
-5. 架构建议：单例 GameDataManager，ID引用代替对象引用
-6. 初学者注意事项：推荐单例模式，避免循环引用，数据构建顺序等
+PM Agent conducted a comprehensive project review, reading all 21 Java source files, 5 CSV data files (now 6), and 8 documentation files. The review covered: directory structure, 7 core entities, 8 Java concepts (inheritance, interface, encapsulation, polymorphism, collections, exception handling, file I/O, enums), and 8 system features. Found 4 issues:
+
+1. **Critical**: CSV data files contained Chinese names (equipment, heroes, players) but Java source code (DataInitializer.java) used English names — language inconsistency after project translation.
+2. **Minor**: README listed 3 known but unfixed bugs (plaintext password, equipment usage count on hero delete, teamName cache on team rename).
+3. **Medium**: Admin data was not persisted to CSV — only players, heroes, equipment, teams, and matches were saved. Program restart would lose Admin data (only default admin recreated).
+4. **Minor**: `ai/reflection.md` filename uses non-standard spelling (missing one 'l').
 
 ### My Decision
 
-接受（选项A）。同意 plan.md 的全部设计，包括：ID引用设计、Identifiable + Reportable 接口、3个枚举、6个Service类、CSV存储格式、包结构设计。
-
-特别说明：在选择架构设计时，我第一次看到 HashMap 这个概念。AI 解释了 HashMap 是一种"键值对"集合，可以通过 ID 快速查找对象（O(1) 时间复杂度）。我以前只会用 ArrayList，现在理解了为什么用 HashMap 做数据中心查找比用 List 遍历快得多。后续实现阶段我会进一步学习 HashMap 的具体用法。
-
-### My Manual Change
-
-无。
-
----
-
-## Prompt 03 — 类设计定型（Checkpoint 2）
-
-* **Time**: TODO(HUMAN)
-* **Tool/Model**: Cherry + Claude（Project Manager Agent）
-* **Agent Role**: Project Manager Agent（项目经理）
-* **Related Commit**: TODO(HUMAN)
-
-### My Prompt
-
-```
-（系统自动：Architect Agent 已给出完整架构分析后，PM Agent 生成了 design.md 并呈现 Checkpoint 2）
-要求确认：接口选择、包结构、MatchRecord 不实现 Identifiable、日期用 String、约20个文件
-```
-
-### AI Response Summary
-
-PM Agent 生成了完整的 design.md，包含：
-- 3个枚举的完整定义（HeroType, EquipmentType, MatchResult）
-- 2个接口的完整方法签名（Identifiable, Reportable）
-- 7个模型类的详细属性表和方法签名表
-- 6个 Service 类的职责和核心方法
-- HashMap 和单例模式的初学者解释（写入 design.md）
-- 菜单结构设计（Admin/Player 双角色）
-
-### My Decision
-
-接受（选项A）。同意全部类设计，开始写代码。
+- Problem 1: Fix — regenerate all CSV files with English data matching DataInitializer.java
+- Problem 2: Skip for now — keep as documented known limitations
+- Problem 3: Fix — add Admin CSV save/load to FileStorageService and create admins.csv
+- Problem 4: Keep as-is (matches project requirements)
 
 ### My Manual Change
 
-无。
+Wrote the prompt to trigger PM Agent to review the project. Confirmed all three fix decisions.
 
 ---
+
+### AI Fix Actions
+
+1. Regenerated 5 CSV data files (`equipment.csv`, `heroes.csv`, `players.csv`, `teams.csv`, `matches.csv`) — all names now in English matching DataInitializer.java. Equipment usage counts recalculated based on `addEquipmentToHero()` calls.
+2. Added `saveAdmins()` and `loadAdmins()` methods to `FileStorageService.java`, integrated into `saveAll()` and `loadAll()`.
+3. Created `data/admins.csv` with default admin record (ID=999, admin/admin, Super Admin).
+
+### Files Modified
+- `data/equipment.csv` — rewritten (English names, recalculated usageCount)
+- `data/heroes.csv` — rewritten (English names and descriptions)
+- `data/players.csv` — rewritten (English player names)
+- `data/teams.csv` — unchanged (already English)
+- `data/matches.csv` — unchanged (already English)
+- `data/admins.csv` — new file
+- `src/service/FileStorageService.java` — added `saveAdmins()`, `loadAdmins()`, updated `saveAll()` and `loadAll()`
+
+

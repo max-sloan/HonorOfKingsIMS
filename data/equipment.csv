@@ -1,21 +1,21 @@
 id,name,equipType,price,attributes,usageCount
-1,破军,ATTACK,2950,攻击力:180,4
-2,无尽战刃,ATTACK,2140,暴击率:25;攻击力:110,4
-3,末世,ATTACK,2160,吸血:10;攻速:30;攻击力:60,2
-4,宗师之力,ATTACK,2100,暴击率:20;生命值:500;攻击力:80,2
-5,暗影战斧,ATTACK,2090,生命值:500;攻击力:85;冷却缩减:15,3
-6,闪电匕首,ATTACK,1840,攻速:35;暴击率:15;移速:8,3
-7,不祥征兆,DEFENSE,2180,物理防御:270;生命值:1200,4
-8,魔女斗篷,DEFENSE,2120,法术防御:300;生命值:1000,1
-9,反伤刺甲,DEFENSE,1910,物理防御:400;攻击力:40,1
-10,红莲斗篷,DEFENSE,1800,物理防御:240;生命值:1000,1
-11,极寒风暴,DEFENSE,2100,物理防御:360;法力值:500;冷却缩减:20,1
-12,贤者的庇护,DEFENSE,2080,物理防御:140;法术防御:140,1
-13,博学者之怒,MAGIC,2300,法术攻击:240,3
-14,回响之杖,MAGIC,2100,法术攻击:240;移速:7,3
-15,痛苦面具,MAGIC,2040,法术攻击:120;生命值:500;冷却缩减:5,2
-16,辉月,MAGIC,1990,法术攻击:160;冷却缩减:10,2
-17,贤者之书,MAGIC,2990,法术攻击:400;生命值:1000,1
-18,冷静之靴,MOVEMENT,710,移速:60;冷却缩减:15,3
-19,抵抗之靴,MOVEMENT,710,法术防御:110;移速:60,1
-20,贪婪之噬,JUNGLE,2160,攻速:15;移速:8;攻击力:100,1
+1,Breaker,ATTACK,2950,Attack:180,4
+2,Infinity Edge,ATTACK,2140,Crit Rate:25;Attack:110,4
+3,Doomsday,ATTACK,2160,Lifesteal:10;Atk Speed:30;Attack:60,2
+4,Grandmaster,ATTACK,2100,Crit Rate:20;HP:500;Attack:80,2
+5,Shadow Axe,ATTACK,2090,HP:500;Attack:85;CDR:15,3
+6,Lightning Dagger,ATTACK,1840,Atk Speed:35;Crit Rate:15;Move Speed:8,3
+7,Ominous Omen,DEFENSE,2180,Phys Def:270;HP:1200,4
+8,Magic Cloak,DEFENSE,2120,Magic Def:300;HP:1000,1
+9,Thornmail,DEFENSE,1910,Phys Def:400;Attack:40,1
+10,Lava Cloak,DEFENSE,1800,Phys Def:240;HP:1000,1
+11,Frozen Storm,DEFENSE,2100,Phys Def:360;Mana:500;CDR:20,1
+12,Guardian Angel,DEFENSE,2080,Phys Def:140;Magic Def:140,1
+13,Scholar's Wrath,MAGIC,2300,Magic Atk:240,3
+14,Echo Staff,MAGIC,2100,Magic Atk:240;Move Speed:7,3
+15,Torment Mask,MAGIC,2040,Magic Atk:120;HP:500;CDR:5,2
+16,Hourglass,MAGIC,1990,Magic Atk:160;CDR:10,2
+17,Sage Tome,MAGIC,2990,Magic Atk:400;HP:1000,1
+18,Calm Boots,MOVEMENT,710,Move Speed:60;CDR:15,3
+19,Resist Boots,MOVEMENT,710,Magic Def:110;Move Speed:60,1
+20,Greedy Maw,JUNGLE,2160,Atk Speed:15;Move Speed:8;Attack:100,1

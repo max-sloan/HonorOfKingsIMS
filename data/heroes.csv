@@ -1,16 +1,16 @@
 id,name,heroType,difficulty,description,equipIds
-1,李白,ASSASSIN,8,剑仙李白，来去如风,1;2;18
-2,韩信,ASSASSIN,7,国士无双，偷塔之王,1;4;20
-3,孙悟空,ASSASSIN,6,齐天大圣，一棒入魂,2;6;4
-4,妲己,MAGE,2,请尽情吩咐妲己，主人,13;14;18
-5,安琪拉,MAGE,3,知识就是力量,13;15;16
-6,貂蝉,MAGE,7,花开花落花满天,14;17;11
-7,王昭君,MAGE,4,凛冬已至,13;15
-8,诸葛亮,MAGE,6,天下如棋，一步三算,14;16;18
-9,鲁班七号,MARKSMAN,3,鲁班大师，智商二百五,2;6;3
-10,后羿,MARKSMAN,4,周日被我射熄火了,2;3;6
-11,亚瑟,WARRIOR,1,王者荣耀的代言人,5;7;12
-12,程咬金,TANK,3,一个字，干！,10;7;8
-13,廉颇,TANK,4,我可是很强的,7;9
-14,吕布,WARRIOR,5,我的貂蝉在哪里,1;5;7
-15,兰陵王,ASSASSIN,6,暗夜中的猎手,1;5;19
+1,Li Bai,ASSASSIN,8,The sword immortal comes and goes like the wind,1;2;18
+2,Han Xin,ASSASSIN,7,The unmatched strategist king of tower pushing,1;4;20
+3,Sun Wukong,ASSASSIN,6,The Great Sage Equal to Heaven - one strike to the soul,2;6;4
+4,Daji,MAGE,2,Please command me freely master,13;14;18
+5,Angela,MAGE,3,Knowledge is power,13;15;16
+6,Diao Chan,MAGE,7,Flowers bloom and fall across the sky,14;17;11
+7,Wang Zhaojun,MAGE,4,The harsh winter has arrived,13;15
+8,Zhuge Liang,MAGE,6,The world is a chessboard calculated in three moves,14;16;18
+9,Luban No.7,MARKSMAN,3,Master Luban - IQ 250,2;6;3
+10,Hou Yi,MARKSMAN,4,I shot down Sunday,2;3;6
+11,Arthur,WARRIOR,1,The face of Honor of Kings,5;7;12
+12,Cheng Yaojin,TANK,3,One word: Fight!,10;7;8
+13,Lian Po,TANK,4,I am very strong,7;9
+14,Lu Bu,WARRIOR,5,Where is my Diao Chan,1;5;7
+15,Lanling Wang,ASSASSIN,6,The hunter in the dark night,1;5;19
