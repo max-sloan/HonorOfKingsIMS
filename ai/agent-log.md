@@ -143,3 +143,21 @@
 - Problem 4 (spelling): Keep as-is
 
 **Related commits**: TODO(HUMAN)
+
+---
+
+## Project Manager Agent
+
+### Post-Completion: README How-to-Run Section Fix
+
+**Main contribution**:
+- Detected that README.md section 2 "How to Run" was broken: `javac` and `java` commands were missing, and the ` ```powershell ` code fence was never closed
+- The unclosed code block caused all remaining sections (3–8: login accounts, features, Java concepts, AI usage, testing, limitations) to be invisible to Markdown readers
+- Restored the complete compile and run commands
+- Added closing ` ``` ` to properly terminate the code block
+- All 8 README sections now render correctly
+- Updated test-cases.md with T15 (README review test case)
+
+**Human decision**: Fix confirmed — restore missing commands and close code block.
+
+**Related commits**: TODO(HUMAN)

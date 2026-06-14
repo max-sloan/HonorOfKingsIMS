@@ -194,5 +194,49 @@ Wrote the prompt to trigger PM Agent to review the project. Confirmed all three 
 - `data/matches.csv` — unchanged (already English)
 - `data/admins.csv` — new file
 - `src/service/FileStorageService.java` — added `saveAdmins()`, `loadAdmins()`, updated `saveAll()` and `loadAll()`
+* **Related Commit**: fb20049 [AI-PM] fix CSV data consistency and add Admin persistence
 
+
+
+## Prompt 08 — README How-to-Run Fix
+
+* **Time**: Jun 14th, 2026
+* **Tool/Model**: Cherry + DeepSeek (Project Manager Agent)
+* **Agent Role**: Project Manager Agent
+* **Related Commit**: TODO(HUMAN)
+
+### My Prompt
+
+"I noticed the README has a problem, specifically the 'How to Run' section. It seems part of it is missing. After detecting, report the result to me, then I will decide whether to fix it."
+
+### AI Response Summary
+
+PM Agent read README.md and found two issues in section 2 "How to Run":
+
+1. **Missing compile and run commands**: The code block only contained `cd Desktop/HonorOfKingsIMS`, the `javac` compile command and `java` run command were completely lost.
+2. **Unclosed code block**: The ` ```powershell ` fence was never closed with ` ``` `, causing all subsequent sections (3–8) to be swallowed by the Markdown renderer as part of the code block. Sections about login accounts, features, Java concepts, AI usage, testing, and known limitations were invisible to readers.
+
+### My Decision
+
+Fix — add the missing `javac` and `java` commands, close the code block, and restore all section visibility.
+
+### My Manual Change
+
+None. The AI detected the issue and I confirmed the fix.
+
+---
+
+### AI Fix Actions
+
+1. Added the two missing commands after `cd Desktop/HonorOfKingsIMS`:
+   - `javac -encoding UTF-8 -d out src/model/enums/*.java src/model/interfaces/*.java src/model/*.java src/util/*.java src/service/*.java src/Main.java`
+   - `java -cp out -Dfile.encoding=UTF-8 Main`
+2. Added the closing ` ``` ` to properly end the Markdown code block.
+3. Updated `ai/prompts.md` (this entry), `ai/agent-log.md`, and `docs/test-cases.md` (added T15 README review test case).
+
+### Files Modified
+- `README.md` — restored missing compile/run commands, closed code block
+- `ai/prompts.md` — Prompt 08 added
+- `ai/agent-log.md` — README fix session entry added
+- `docs/test-cases.md` — T15 README review test case added
 
