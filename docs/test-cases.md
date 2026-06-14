@@ -167,7 +167,7 @@
 | **Function** | File I/O — save then reload |
 | **Input** | Save -> Restart -> Load |
 | **Expected** | Data consistent, password="123" |
-| **Actual** | 5 CSV files correct, data intact after load |
+| **Actual** | 6 CSV files correct, data intact after load |
 | **Result** | Pass |
 
 ---

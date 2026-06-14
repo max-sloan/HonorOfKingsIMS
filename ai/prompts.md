@@ -8,7 +8,7 @@
 * **Related Commit**:1da742f [AI-Implementation] implement model classes, service layer, and Main menu
 
 ### My Prompt
-Because of my fault, I make my project become miss and I don't know how to continue my project. So I decide to use the Agent to help me to manage my project. With the AI help, I build the main body of my project and I sent the first commit.
+Due to errors I made earlier, the project encountered anomalies. I believe it would be better to start over: clear the original files and create a new project architecture that meets all requirements.
 
 ### AI Response Summary
 
@@ -20,7 +20,7 @@ Accepted the AI's suggestions. Confirmed path and agreed to delete and rebuild t
 
 ### My Manual Change
 
-None.
+I manually modified the project name to make it more compliant with the requirements and optimized the design process.
 
 
 
@@ -30,7 +30,7 @@ None.
 * **Tool/Model**: Cherry + DeepseekV4 (Architect Agent)
 * **Agent Role**: Architect Agent
 * **Related Commit**:1da742f [AI-Implementation] implement model classes, service layer, and Main menu
-                     a616f59 [AI-Implementation] complete file I/O: save and load data via CSV
+ a616f59 [AI-Implementation] complete file I/O: save and load data via CSV
 
 ### My Prompt
 
@@ -46,7 +46,7 @@ Accepted (Option A). First time seeing HashMap concept. AI explained HashMap as 
 
 ### My Manual Change
 
-None.
+I have remove HashMap from this project.
 
 
 ## Prompt 03 — Class Design Finalization (Checkpoint 2)
@@ -57,8 +57,8 @@ None.
 * **Related Commit**:aae9a6 [AI-Architect] add sequence diagram for player lookup flow
 
 ### My Prompt
-
-(Auto-generated: PM Agent generated design.md and presented Checkpoint 2)
+Based on the documents I just told you about, design the classes required for this project. The design must include at least 3 enums, 2 interfaces, 7 model classes, 6 service classes, explanations for the use of HashMap and the Singleton pattern, and a menu structure design for the dual roles of Admin and Player.
+Do not directly write the generated content into the project. Instead, generate and print it on the screen for me to review. Only after I have checked and confirmed there are no errors, and with my explicit consent, may you write the generated content into the files.
 
 ### AI Response Summary
 
@@ -66,11 +66,11 @@ PM Agent generated complete design.md: 3 enums, 2 interfaces, 7 model classes, 6
 
 ### My Decision
 
-Accepted (Option A). Approved all class design, proceed to code.
+I have decided to adopt your design for the model classes, but improvements are still needed in other parts.
 
 ### My Manual Change
 
-None.
+I have input your design for the model classes, but I have not adopted the designs for other components. Instead, I have redesigned all other files from scratch.
 
 
 
@@ -152,7 +152,7 @@ Fixed comma issues in hero descriptions, sorted matches by time, added auth.logo
 * **Time**: Jun 12th, 2026
 * **Tool/Model**: Cherry + DeepSeek (Project Manager Agent)
 * **Agent Role**: Project Manager Agent
-* **Related Commit**: TODO(HUMAN)
+* **Related Commit**: bd26426 [AI-Review] fix English text inconsistencies after translation
 
 ### My Prompt
 
@@ -203,7 +203,7 @@ Wrote the prompt to trigger PM Agent to review the project. Confirmed all three 
 * **Time**: Jun 14th, 2026
 * **Tool/Model**: Cherry + DeepSeek (Project Manager Agent)
 * **Agent Role**: Project Manager Agent
-* **Related Commit**: TODO(HUMAN)
+* **Related Commit**: 90f24bb (HEAD -> master) [Human] fix README missing compile/run commands and unclosed code block
 
 ### My Prompt
 
@@ -226,17 +226,55 @@ None. The AI detected the issue and I confirmed the fix.
 
 ---
 
+
+
+## Prompt 09 — CSV Documentation Enhancement
+
+* **Time**: Jun 14th, 2026
+* **Tool/Model**: Cherry + DeepSeek (Project Manager Agent)
+* **Agent Role**: Project Manager Agent
+* **Related Commit**: TODO(HUMAN)
+
+### My Prompt
+
+"I notice the CSV documentation in the project is not clearly recorded. I need you to check this area, tell me how to improve it, and only make changes I approve."
+
+### AI Response Summary
+
+PM Agent searched all Markdown files and Java files for CSV/file I/O references. Found 5 issues:
+
+1. `docs/design.md` §4.6: said "5 data types" — wrong, now 6 (Admin added)
+2. `docs/test-cases.md` T14: said "5 CSV files correct" — wrong, now 6
+3. `docs/design.md`: no dedicated CSV format specification chapter existed — the entire CSV storage design was documented in just 4 scattered one-liners
+4. `plan.md` §6: only one line "Storage: CSV files in data/ folder"
+5. `README.md`: only mentioned "File I/O (CSV)" in two words
+
+Proposed 3 changes: fix 5→6 errors (A, B), add a dedicated CSV chapter to design.md with 4 sub-sections (C).
+
+### My Decision
+
+- Fix the two "5→6" data errors
+- Add a new independent §8 CSV File Format Specification chapter in `docs/design.md`
+
+### My Manual Change
+
+Wrote the prompt for AI to check CSV documentation and accepted the 3 proposed fixes.
+
+---
+
 ### AI Fix Actions
 
-1. Added the two missing commands after `cd Desktop/HonorOfKingsIMS`:
-   - `javac -encoding UTF-8 -d out src/model/enums/*.java src/model/interfaces/*.java src/model/*.java src/util/*.java src/service/*.java src/Main.java`
-   - `java -cp out -Dfile.encoding=UTF-8 Main`
-2. Added the closing ` ``` ` to properly end the Markdown code block.
-3. Updated `ai/prompts.md` (this entry), `ai/agent-log.md`, and `docs/test-cases.md` (added T15 README review test case).
+1. Fixed `docs/design.md` §4.6: `5 data types` → `6 data types`
+2. Fixed `docs/test-cases.md` T14: `5 CSV files` → `6 CSV files`
+3. Inserted new **§8 CSV File Format Specification** in `docs/design.md` with 4 sub-sections:
+   - **8.1 Delimiter Rules**: three-level separator system (comma, semicolon, colon) with explanation
+   - **8.2 File Definitions**: 6 subsections (8.2.1–8.2.6), each with a column table and example row for equipment, heroes, teams, players, matches, admins
+   - **8.3 Load Order**: 6-step dependency chain with explanation of why order matters
+   - **8.4 Java Features Used**: table of 6 Java file I/O features (try-with-resources, BufferedReader, PrintWriter, String.split, String.join, Enum.valueOf)
+4. Renumbered subsequent chapters §8→§9, §9→§10, §10→§11, §11→§12
 
 ### Files Modified
-- `README.md` — restored missing compile/run commands, closed code block
-- `ai/prompts.md` — Prompt 08 added
-- `ai/agent-log.md` — README fix session entry added
-- `docs/test-cases.md` — T15 README review test case added
-
+- `docs/design.md` — fixed 5→6, added §8 CSV chapter, renumbered §9~12
+- `docs/test-cases.md` — fixed 5→6 in T14
+- `ai/prompts.md` — Prompt 09 added (this entry)
+- `ai/agent-log.md` — CSV documentation session entry added

@@ -65,7 +65,7 @@
 **Human decision**: Chose B (add win rate and team name), then A (confirm).
 
 **Related commits**: 1da742f [AI-Implementation] implement model classes, service layer, and Main menu
-, `f2435d7`
+, f2435d7[Human]fix menu alignment and add player win rate simulation
 
 ---
 
@@ -142,7 +142,7 @@
 - Problem 3 (Admin persistence): Fix — add CSV save/load
 - Problem 4 (spelling): Keep as-is
 
-**Related commits**: TODO(HUMAN)
+**Related commits**: fb20049 [AI-PM] fix CSV data consistency and add Admin persistence
 
 ---
 
@@ -159,5 +159,27 @@
 - Updated test-cases.md with T15 (README review test case)
 
 **Human decision**: Fix confirmed — restore missing commands and close code block.
+
+**Related commits**: 90f24bb [Human] fix README missing compile/run commands and unclosed code block
+
+---
+
+## Project Manager Agent
+
+### Post-Completion: CSV Documentation Enhancement
+
+**Main contribution**:
+- Searched all Markdown and Java files for CSV/file I/O references to assess documentation completeness
+- Found 5 issues: outdated "5 data types/files" (actual: 6), no dedicated CSV format chapter in design.md, too-brief CSV mentions in plan.md and README.md
+- Fixed two "5→6" data errors in `docs/design.md` §4.6 and `docs/test-cases.md` T14
+- Created comprehensive **§8 CSV File Format Specification** in `docs/design.md`:
+  - Delimiter rules (three-level: comma/semicolon/colon)
+  - Full column definition tables for all 6 CSV files with example rows
+  - Load order dependency chain with explanation
+  - Java file I/O features table (try-with-resources, BufferedReader, PrintWriter, etc.)
+- Renumbered subsequent design.md chapters (§8→§12)
+- Updated prompts.md (Prompt 09) and agent-log.md (this entry)
+
+**Human decision**: Accepted all 3 proposed changes — fix 5→6 errors, add dedicated CSV chapter.
 
 **Related commits**: TODO(HUMAN)
