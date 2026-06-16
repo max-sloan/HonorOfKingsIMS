@@ -1,4 +1,5 @@
 import model.*;
+import model.enums.*;
 import service.*;
 import util.*;
 import java.util.*;
@@ -324,47 +325,421 @@ public class Main {
 
     private static void doDataManagement() {
         while (true) {
-            System.out.println("\n===== Data Management =====");
-            System.out.println("1. Add Player  2. Delete Player  3. List All");
-            System.out.println("4. Join Team   5. Give Hero      0. Back");
-            int c = InputHelper.readIntInRange("Select: ", 0, 5);
+            String line = repeatStr("=", 50);
+            System.out.println("\n" + line);
+            System.out.println("  Data Management (Admin Only)");
+            System.out.println(line);
+            System.out.println("  -- Player --");
+            System.out.println("   1. Add Player          2. Delete Player       3. List All Players");
+            System.out.println("   4. Edit Player         5. Join Team           6. Give Hero to Player");
+            System.out.println("  -- Hero --");
+            System.out.println("   7. Add Hero            8. Delete Hero         9. List All Heroes");
+            System.out.println("  -- Equipment --");
+            System.out.println("  10. Add Equipment      11. Delete Equipment   12. List All Equipment");
+            System.out.println("  13. Assign Equipment to Hero");
+            System.out.println("  -- Team & Match --");
+            System.out.println("  14. Add Team           15. Delete Team        16. List All Teams");
+            System.out.println("  17. Add Match Record");
+            System.out.println("   0. Back");
+            System.out.println(line);
+
+            int c = InputHelper.readIntInRange("Select: ", 0, 17);
             switch (c) {
-                case 1:
-                    String name = InputHelper.readNonEmptyString("Name: ");
-                    String pwd = InputHelper.readNonEmptyString("Password: ");
-                    int lv = InputHelper.readIntInRange("Level(1-30): ", 1, 30);
-                    int sc = InputHelper.readInt("Rank Score: ");
-                    Player np = adminService.addPlayer(name, pwd, lv, sc);
-                    System.out.println("[Success] ID=" + np.getId());
-                    break;
-                case 2:
-                    int did = InputHelper.readInt("Delete player ID: ");
-                    Player dp = dm.findPlayerById(did);
-                    if (dp == null) { System.out.println("[Failed] Not found"); break; }
-                    if (InputHelper.readLine("Confirm delete " + dp.getName() + "? (yes): ").equalsIgnoreCase("yes")) {
-                        adminService.deletePlayer(did);
-                        System.out.println("[Success] Deleted");
-                    }
-                    break;
-                case 3:
-                    for (Player p : dm.getAllPlayers()) System.out.println(p.generateReport());
-                    break;
-                case 4:
-                    if (adminService.assignPlayerToTeam(
-                        InputHelper.readInt("Player ID: "), InputHelper.readInt("Team ID: ")))
-                        System.out.println("[Success]");
-                    else System.out.println("[Failed]");
-                    break;
-                case 5:
-                    if (adminService.addHeroToPlayer(
-                        InputHelper.readInt("Player ID: "), InputHelper.readInt("Hero ID: ")))
-                        System.out.println("[Success]");
-                    else System.out.println("[Failed]");
-                    break;
+                case 1:  doAddPlayer(); break;
+                case 2:  doDeletePlayer(); break;
+                case 3:  doListPlayers(); break;
+                case 4:  doEditPlayer(); break;
+                case 5:  doJoinTeam(); break;
+                case 6:  doGiveHero(); break;
+                case 7:  doAddHero(); break;
+                case 8:  doDeleteHero(); break;
+                case 9:  doListHeroes(); break;
+                case 10: doAddEquipment(); break;
+                case 11: doDeleteEquipment(); break;
+                case 12: doListEquipment(); break;
+                case 13: doAssignEquipToHero(); break;
+                case 14: doAddTeam(); break;
+                case 15: doDeleteTeam(); break;
+                case 16: doListTeams(); break;
+                case 17: doAddMatchRecord(); break;
                 case 0: return;
             }
             if (c != 0) InputHelper.waitForEnter();
         }
+    }
+
+    // ---- Player operations ----
+
+    private static void doAddPlayer() {
+        System.out.println("\n--- Add New Player ---");
+        System.out.println("[Tip] Enter the new player's basic information below.");
+        String name = InputHelper.readNonEmptyString("  Player Name: ");
+        String pwd = InputHelper.readNonEmptyString("  Password: ");
+        int lv = InputHelper.readIntInRange("  Level (1~30): ", 1, 30);
+        int sc = InputHelper.readInt("  Rank Score: ");
+        Player np = adminService.addPlayer(name, pwd, lv, sc);
+        System.out.println("[Success] Player created! ID=" + np.getId() + ", Name=" + np.getName());
+    }
+
+    private static void doDeletePlayer() {
+        System.out.println("\n--- Delete Player ---");
+        System.out.println("[Tip] Enter the ID of the player you want to delete.");
+        int did = InputHelper.readInt("  Player ID: ");
+        Player dp = dm.findPlayerById(did);
+        if (dp == null) {
+            System.out.println("[Failed] No player found with ID=" + did);
+            return;
+        }
+        System.out.println("  Found: " + dp.getName() + " (Team: " + dp.getTeamName() + ")");
+        String confirm = InputHelper.readLine("  Type 'yes' to confirm deletion: ");
+        if ("yes".equalsIgnoreCase(confirm)) {
+            adminService.deletePlayer(did);
+            System.out.println("[Success] Player '" + dp.getName() + "' deleted.");
+        } else {
+            System.out.println("[Cancelled] Deletion aborted.");
+        }
+    }
+
+    private static void doListPlayers() {
+        System.out.println("\n--- All Players ---");
+        Collection<Player> players = dm.getAllPlayers();
+        if (players.isEmpty()) {
+            System.out.println("  (No players in the system)");
+            return;
+        }
+        System.out.println("  ID   Name           Lv   Win Rate   Team");
+        System.out.println("  ---- -------------- ---- --------- -------");
+        for (Player p : players) {
+            System.out.printf("  %-4d %-14s %-4d %-8s  %s\n",
+                p.getId(), p.getName(), p.getLevel(),
+                String.format("%.1f%%", p.getWinRate()), p.getTeamName());
+        }
+    }
+
+    private static void doEditPlayer() {
+        System.out.println("\n--- Edit Player ---");
+        System.out.println("[Tip] You can change a player's name or password.");
+        int pid = InputHelper.readInt("  Player ID: ");
+        Player p = dm.findPlayerById(pid);
+        if (p == null) {
+            System.out.println("[Failed] No player found with ID=" + pid);
+            return;
+        }
+        System.out.println("  Editing: " + p.getName() + " (Level " + p.getLevel() + ")");
+        System.out.println("  1. Change Name (current: " + p.getName() + ")");
+        System.out.println("  2. Change Password");
+        System.out.println("  0. Cancel");
+        int choice = InputHelper.readIntInRange("  Select: ", 0, 2);
+        if (choice == 1) {
+            String newName = InputHelper.readNonEmptyString("  New Name: ");
+            adminService.updatePlayerName(pid, newName);
+            System.out.println("[Success] Name changed to '" + newName + "'.");
+        } else if (choice == 2) {
+            String newPwd = InputHelper.readNonEmptyString("  New Password: ");
+            adminService.updatePlayerPassword(pid, newPwd);
+            System.out.println("[Success] Password updated.");
+        }
+    }
+
+    private static void doJoinTeam() {
+        System.out.println("\n--- Assign Player to Team ---");
+        System.out.println("[Tip] Assign a player to an existing team. The player will leave their current team.");
+        int pid = InputHelper.readInt("  Player ID: ");
+        Player p = dm.findPlayerById(pid);
+        if (p == null) {
+            System.out.println("[Failed] No player found with ID=" + pid);
+            return;
+        }
+        System.out.println("  Player: " + p.getName() + " | Current Team: " + p.getTeamName());
+        System.out.println("  Available Teams:");
+        for (Team t : dm.getAllTeams()) {
+            System.out.println("    ID=" + t.getId() + "  " + t.getName() + " (" + t.getPlayerIds().size() + " members)");
+        }
+        int tid = InputHelper.readInt("  Target Team ID: ");
+        if (adminService.assignPlayerToTeam(pid, tid)) {
+            Team t = dm.findTeamById(tid);
+            System.out.println("[Success] " + p.getName() + " is now a member of " + t.getName() + ".");
+        } else {
+            System.out.println("[Failed] Invalid player or team ID.");
+        }
+    }
+
+    private static void doGiveHero() {
+        System.out.println("\n--- Give Hero to Player ---");
+        System.out.println("[Tip] Add a hero to a player's hero collection.");
+        int pid = InputHelper.readInt("  Player ID: ");
+        Player p = dm.findPlayerById(pid);
+        if (p == null) {
+            System.out.println("[Failed] No player found with ID=" + pid);
+            return;
+        }
+        System.out.println("  Player: " + p.getName() + " | Owns " + p.getHeroIdList().size() + " heroes");
+        System.out.println("[Tip] Available heroes:");
+        for (Hero h : dm.getAllHeroes()) {
+            boolean owned = p.getHeroIdList().contains(h.getId());
+            System.out.printf("    ID=%-2d %-14s [%s] %s\n",
+                h.getId(), h.getName(), h.getHeroType().getDisplayName(),
+                owned ? "(already owned)" : "");
+        }
+        int hid = InputHelper.readInt("  Hero ID to give: ");
+        if (adminService.addHeroToPlayer(pid, hid)) {
+            Hero h = dm.findHeroById(hid);
+            System.out.println("[Success] " + h.getName() + " given to " + p.getName() + ".");
+        } else {
+            System.out.println("[Failed] Invalid player or hero ID.");
+        }
+    }
+
+    // ---- Hero operations ----
+
+    private static void doAddHero() {
+        System.out.println("\n--- Add New Hero ---");
+        System.out.println("[Tip] Enter the new hero's information.");
+        String name = InputHelper.readNonEmptyString("  Hero Name: ");
+        System.out.println("  Hero Types: TANK | WARRIOR | ASSASSIN | MAGE | MARKSMAN | SUPPORT");
+        String typeStr = InputHelper.readNonEmptyString("  Hero Type: ");
+        HeroType heroType;
+        try {
+            heroType = HeroType.valueOf(typeStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("[Failed] Invalid hero type! Use one of the listed types.");
+            return;
+        }
+        int diff = InputHelper.readIntInRange("  Difficulty (1~10): ", 1, 10);
+        String desc = InputHelper.readNonEmptyString("  Description: ");
+        Hero h = adminService.addHero(name, heroType, diff, desc);
+        System.out.println("[Success] Hero created! ID=" + h.getId() + ", Name=" + h.getName());
+    }
+
+    private static void doDeleteHero() {
+        System.out.println("\n--- Delete Hero ---");
+        System.out.println("[Tip] Enter the ID of the hero you want to delete.");
+        System.out.println("  Current heroes:");
+        for (Hero h : dm.getAllHeroes()) {
+            System.out.printf("    ID=%-2d %-14s [%s]\n", h.getId(), h.getName(), h.getHeroType().getDisplayName());
+        }
+        int hid = InputHelper.readInt("  Hero ID: ");
+        Hero h = dm.findHeroById(hid);
+        if (h == null) {
+            System.out.println("[Failed] No hero found with ID=" + hid);
+            return;
+        }
+        String confirm = InputHelper.readLine("  Type 'yes' to confirm deletion of '" + h.getName() + "': ");
+        if ("yes".equalsIgnoreCase(confirm)) {
+            adminService.deleteHero(hid);
+            System.out.println("[Success] Hero '" + h.getName() + "' deleted.");
+        } else {
+            System.out.println("[Cancelled] Deletion aborted.");
+        }
+    }
+
+    private static void doListHeroes() {
+        System.out.println("\n--- All Heroes ---");
+        Collection<Hero> heroes = dm.getAllHeroes();
+        if (heroes.isEmpty()) {
+            System.out.println("  (No heroes in the system)");
+            return;
+        }
+        System.out.println("  ID   Name             Type        Diff   Win Rate   Equipment");
+        System.out.println("  ---- ---------------- ---------- -----  --------- ---------");
+        for (Hero h : heroes) {
+            System.out.printf("  %-4d %-16s %-10s %-5d %-6.1f%%   %d items\n",
+                h.getId(), h.getName(), h.getHeroType().getDisplayName(),
+                h.getDifficulty(), h.getHeroWinRate(), h.getRecommendedEquipIds().size());
+        }
+    }
+
+    // ---- Equipment operations ----
+
+    private static void doAddEquipment() {
+        System.out.println("\n--- Add New Equipment ---");
+        System.out.println("[Tip] Enter the new equipment's information.");
+        String name = InputHelper.readNonEmptyString("  Equipment Name: ");
+        System.out.println("  Equipment Types: ATTACK | DEFENSE | MOVEMENT | MAGIC | JUNGLE | SUPPORT");
+        String typeStr = InputHelper.readNonEmptyString("  Equipment Type: ");
+        EquipmentType equipType;
+        try {
+            equipType = EquipmentType.valueOf(typeStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("[Failed] Invalid equipment type! Use one of the listed types.");
+            return;
+        }
+        int price = InputHelper.readInt("  Price (gold): ");
+        Equipment e = adminService.addEquipment(name, equipType, price);
+        System.out.println("[Success] Equipment created! ID=" + e.getId() + ", Name=" + e.getName());
+    }
+
+    private static void doDeleteEquipment() {
+        System.out.println("\n--- Delete Equipment ---");
+        System.out.println("[Tip] Enter the ID of the equipment you want to delete.");
+        System.out.println("  Current equipment:");
+        for (Equipment e : dm.getAllEquipments()) {
+            System.out.printf("    ID=%-2d %-18s [%s] Price=%d\n",
+                e.getId(), e.getName(), e.getEquipType().getDisplayName(), e.getPrice());
+        }
+        int eid = InputHelper.readInt("  Equipment ID: ");
+        Equipment e = dm.findEquipmentById(eid);
+        if (e == null) {
+            System.out.println("[Failed] No equipment found with ID=" + eid);
+            return;
+        }
+        String confirm = InputHelper.readLine("  Type 'yes' to confirm deletion of '" + e.getName() + "': ");
+        if ("yes".equalsIgnoreCase(confirm)) {
+            adminService.deleteEquipment(eid);
+            System.out.println("[Success] Equipment '" + e.getName() + "' deleted.");
+        } else {
+            System.out.println("[Cancelled] Deletion aborted.");
+        }
+    }
+
+    private static void doListEquipment() {
+        System.out.println("\n--- All Equipment ---");
+        Collection<Equipment> equips = dm.getAllEquipments();
+        if (equips.isEmpty()) {
+            System.out.println("  (No equipment in the system)");
+            return;
+        }
+        System.out.println("  ID   Name                 Type        Price    Usage");
+        System.out.println("  ---- -------------------- ---------- -------  -----");
+        for (Equipment e : equips) {
+            System.out.printf("  %-4d %-20s %-10s %-7d %d\n",
+                e.getId(), e.getName(), e.getEquipType().getDisplayName(),
+                e.getPrice(), e.getUsageCount());
+        }
+    }
+
+    private static void doAssignEquipToHero() {
+        System.out.println("\n--- Assign Equipment to Hero ---");
+        System.out.println("[Tip] Link an equipment item to a hero as a recommendation.");
+        System.out.println("  Heroes:");
+        for (Hero h : dm.getAllHeroes()) {
+            System.out.printf("    ID=%-2d %-14s [%s]\n", h.getId(), h.getName(), h.getHeroType().getDisplayName());
+        }
+        int hid = InputHelper.readInt("  Hero ID: ");
+        Hero hero = dm.findHeroById(hid);
+        if (hero == null) {
+            System.out.println("[Failed] No hero found with ID=" + hid);
+            return;
+        }
+        System.out.println("  Selected: " + hero.getName());
+        System.out.println("  Equipment available:");
+        for (Equipment e : dm.getAllEquipments()) {
+            boolean assigned = hero.getRecommendedEquipIds().contains(e.getId());
+            System.out.printf("    ID=%-2d %-18s [%s] %s\n",
+                e.getId(), e.getName(), e.getEquipType().getDisplayName(),
+                assigned ? "(already assigned)" : "");
+        }
+        int eid = InputHelper.readInt("  Equipment ID: ");
+        if (adminService.addEquipmentToHero(hid, eid)) {
+            Equipment e = dm.findEquipmentById(eid);
+            System.out.println("[Success] '" + e.getName() + "' assigned to " + hero.getName() + ".");
+        } else {
+            System.out.println("[Failed] Invalid hero or equipment ID.");
+        }
+    }
+
+    // ---- Team operations ----
+
+    private static void doAddTeam() {
+        System.out.println("\n--- Add New Team ---");
+        System.out.println("[Tip] Enter the new team's information.");
+        String name = InputHelper.readNonEmptyString("  Team Name: ");
+        String date = InputHelper.readNonEmptyString("  Created Date (yyyy-MM-dd): ");
+        Team t = adminService.addTeam(name, date);
+        System.out.println("[Success] Team created! ID=" + t.getId() + ", Name=" + t.getName());
+    }
+
+    private static void doDeleteTeam() {
+        System.out.println("\n--- Delete Team ---");
+        System.out.println("[Tip] Deleting a team will remove all members from it.");
+        System.out.println("  Current teams:");
+        for (Team t : dm.getAllTeams()) {
+            System.out.printf("    ID=%-2d %-10s Members=%d  Matches=%d\n",
+                t.getId(), t.getName(), t.getPlayerIds().size(), t.getMatchRecordIds().size());
+        }
+        int tid = InputHelper.readInt("  Team ID: ");
+        Team t = dm.findTeamById(tid);
+        if (t == null) {
+            System.out.println("[Failed] No team found with ID=" + tid);
+            return;
+        }
+        String confirm = InputHelper.readLine("  Type 'yes' to confirm deletion of '" + t.getName() + "': ");
+        if ("yes".equalsIgnoreCase(confirm)) {
+            adminService.deleteTeam(tid);
+            System.out.println("[Success] Team '" + t.getName() + "' deleted. All members are now teamless.");
+        } else {
+            System.out.println("[Cancelled] Deletion aborted.");
+        }
+    }
+
+    private static void doListTeams() {
+        System.out.println("\n--- All Teams ---");
+        Collection<Team> teams = dm.getAllTeams();
+        if (teams.isEmpty()) {
+            System.out.println("  (No teams in the system)");
+            return;
+        }
+        System.out.println("  ID   Name         Members  Matches  Created");
+        System.out.println("  ---- ------------ -------  -------  ----------");
+        for (Team t : teams) {
+            System.out.printf("  %-4d %-12s %-7d %-7d  %s\n",
+                t.getId(), t.getName(), t.getPlayerIds().size(),
+                t.getMatchRecordIds().size(), t.getCreatedDate());
+        }
+    }
+
+    // ---- Match operations ----
+
+    private static void doAddMatchRecord() {
+        System.out.println("\n--- Add Match Record ---");
+        System.out.println("[Tip] Record a match between two teams. Player stats will auto-update.");
+
+        System.out.println("  Teams:");
+        for (Team t : dm.getAllTeams()) {
+            System.out.printf("    ID=%-2d %s (%d members)\n", t.getId(), t.getName(), t.getPlayerIds().size());
+        }
+
+        int teamAId = InputHelper.readInt("  Team A ID: ");
+        if (!dm.teamExists(teamAId)) {
+            System.out.println("[Failed] Team A not found.");
+            return;
+        }
+        int teamBId = InputHelper.readInt("  Team B ID: ");
+        if (!dm.teamExists(teamBId)) {
+            System.out.println("[Failed] Team B not found.");
+            return;
+        }
+        if (teamAId == teamBId) {
+            System.out.println("[Failed] A team cannot play against itself.");
+            return;
+        }
+
+        Team teamA = dm.findTeamById(teamAId);
+        Team teamB = dm.findTeamById(teamBId);
+        System.out.println("  Match: " + teamA.getName() + " vs " + teamB.getName());
+
+        System.out.println("  Result: 1. " + teamA.getName() + " Wins  2. " + teamB.getName() + " Wins  3. Draw");
+        int resultChoice = InputHelper.readIntInRange("  Select: ", 1, 3);
+
+        MatchResult result;
+        int winnerId;
+        if (resultChoice == 1) {
+            result = MatchResult.TEAM_A_WIN;
+            winnerId = teamAId;
+        } else if (resultChoice == 2) {
+            result = MatchResult.TEAM_B_WIN;
+            winnerId = teamBId;
+        } else {
+            result = MatchResult.DRAW;
+            winnerId = -1;
+        }
+
+        int duration = InputHelper.readInt("  Duration (seconds): ");
+        String time = InputHelper.readNonEmptyString("  Match Time (yyyy-MM-dd HH:mm): ");
+
+        MatchRecord m = adminService.addMatchRecord(teamAId, teamBId, result, winnerId, duration, time);
+        System.out.println("[Success] Match recorded! ID=" + m.getId());
+        System.out.println("[Info] Player match stats and win rates have been auto-updated.");
     }
 
     // ============ Save / Load ============
