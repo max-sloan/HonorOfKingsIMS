@@ -1,21 +1,21 @@
 id,name,equipType,price,attributes,usageCount
 1,Breaker,ATTACK,2950,Attack:180,4
-2,Infinity Edge,ATTACK,2140,Crit Rate:25;Attack:110,4
-3,Doomsday,ATTACK,2160,Lifesteal:10;Atk Speed:30;Attack:60,2
-4,Grandmaster,ATTACK,2100,Crit Rate:20;HP:500;Attack:80,2
-5,Shadow Axe,ATTACK,2090,HP:500;Attack:85;CDR:15,3
-6,Lightning Dagger,ATTACK,1840,Atk Speed:35;Crit Rate:15;Move Speed:8,3
+2,Infinity Edge,ATTACK,2140,Attack:110;Crit Rate:25,4
+3,Doomsday,ATTACK,2160,Attack:60;Atk Speed:30;Lifesteal:10,2
+4,Grandmaster,ATTACK,2100,HP:500;Attack:80;Crit Rate:20,2
+5,Shadow Axe,ATTACK,2090,CDR:15;HP:500;Attack:85,3
+6,Lightning Dagger,ATTACK,1840,Atk Speed:35;Move Speed:8;Crit Rate:15,3
 7,Ominous Omen,DEFENSE,2180,Phys Def:270;HP:1200,4
-8,Magic Cloak,DEFENSE,2120,Magic Def:300;HP:1000,1
+8,Magic Cloak,DEFENSE,2120,HP:1000;Magic Def:300,1
 9,Thornmail,DEFENSE,1910,Phys Def:400;Attack:40,1
 10,Lava Cloak,DEFENSE,1800,Phys Def:240;HP:1000,1
-11,Frozen Storm,DEFENSE,2100,Phys Def:360;Mana:500;CDR:20,1
+11,Frozen Storm,DEFENSE,2100,CDR:20;Phys Def:360;Mana:500,1
 12,Guardian Angel,DEFENSE,2080,Phys Def:140;Magic Def:140,1
 13,Scholar's Wrath,MAGIC,2300,Magic Atk:240,3
-14,Echo Staff,MAGIC,2100,Magic Atk:240;Move Speed:7,3
-15,Torment Mask,MAGIC,2040,Magic Atk:120;HP:500;CDR:5,2
-16,Hourglass,MAGIC,1990,Magic Atk:160;CDR:10,2
-17,Sage Tome,MAGIC,2990,Magic Atk:400;HP:1000,1
-18,Calm Boots,MOVEMENT,710,Move Speed:60;CDR:15,3
+14,Echo Staff,MAGIC,2100,Move Speed:7;Magic Atk:240,3
+15,Torment Mask,MAGIC,2040,CDR:5;HP:500;Magic Atk:120,2
+16,Hourglass,MAGIC,1990,CDR:10;Magic Atk:160,2
+17,Sage Tome,MAGIC,2990,HP:1000;Magic Atk:400,1
+18,Calm Boots,MOVEMENT,710,CDR:15;Move Speed:60,3
 19,Resist Boots,MOVEMENT,710,Magic Def:110;Move Speed:60,1
-20,Greedy Maw,JUNGLE,2160,Atk Speed:15;Move Speed:8;Attack:100,1
+20,Greedy Maw,JUNGLE,2160,Attack:100;Atk Speed:15;Move Speed:8,1
