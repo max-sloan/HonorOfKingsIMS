@@ -1,16 +1,16 @@
-id,name,heroType,difficulty,description,equipIds
-1,Li Bai,ASSASSIN,8,The sword immortal comes and goes like the wind,1;2;18
-2,Han Xin,ASSASSIN,7,The unmatched strategist king of tower pushing,1;4;20
-3,Sun Wukong,ASSASSIN,6,The Great Sage Equal to Heaven - one strike to the soul,2;6;4
-4,Daji,MAGE,2,Please command me freely master,13;14;18
-5,Angela,MAGE,3,Knowledge is power,13;15;16
-6,Diao Chan,MAGE,7,Flowers bloom and fall across the sky,14;17;11
-7,Wang Zhaojun,MAGE,4,The harsh winter has arrived,13;15
-8,Zhuge Liang,MAGE,6,The world is a chessboard calculated in three moves,14;16;18
-9,Luban No.7,MARKSMAN,3,Master Luban - IQ 250,2;6;3
-10,Hou Yi,MARKSMAN,4,I shot down Sunday,2;3;6
-11,Arthur,WARRIOR,1,The face of Honor of Kings,5;7;12
-12,Cheng Yaojin,TANK,3,One word: Fight!,10;7;8
-13,Lian Po,TANK,4,I am very strong,7;9
-14,Lu Bu,WARRIOR,5,Where is my Diao Chan,1;5;7
-15,Lanling Wang,ASSASSIN,6,The hunter in the dark night,1;5;19
+id,name,heroType,difficulty,description,equipIds,heroWinRate
+1,Li Bai,ASSASSIN,8,The sword immortal comes and goes like the wind,1;2;18,52.5
+2,Han Xin,ASSASSIN,7,The unmatched strategist king of tower pushing,1;4;20,48.3
+3,Sun Wukong,ASSASSIN,6,The Great Sage Equal to Heaven - one strike to the soul,2;6;4,50.1
+4,Daji,MAGE,2,Please command me freely master,13;14;18,55.8
+5,Angela,MAGE,3,Knowledge is power,13;15;16,51.2
+6,Diao Chan,MAGE,7,Flowers bloom and fall across the sky,14;17;11,56.0
+7,Wang Zhaojun,MAGE,4,The harsh winter has arrived,13;15,49.5
+8,Zhuge Liang,MAGE,6,The world is a chessboard calculated in three moves,14;16;18,53.7
+9,Luban No.7,MARKSMAN,3,Master Luban - IQ 250,2;6;3,47.2
+10,Hou Yi,MARKSMAN,4,I shot down Sunday,2;3;6,50.9
+11,Arthur,WARRIOR,1,The face of Honor of Kings,5;7;12,54.3
+12,Cheng Yaojin,TANK,3,One word: Fight!,10;7;8,53.1
+13,Lian Po,TANK,4,I am very strong,7;9,48.8
+14,Lu Bu,WARRIOR,5,Where is my Diao Chan,1;5;7,51.5
+15,Lanling Wang,ASSASSIN,6,The hunter in the dark night,1;5;19,49.0

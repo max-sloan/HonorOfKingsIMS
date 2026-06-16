@@ -182,4 +182,43 @@
 
 **Human decision**: Accepted all 3 proposed changes — fix 5→6 errors, add dedicated CSV chapter.
 
+**Related commits**: bf178c7 [Docs] improve CSV file storage format documentation
+
+---
+
+## Project Manager Agent
+
+### Recommendation Engine Implementation (7 Steps)
+
+**Main contribution**:
+
+**Step 1 — Field Analysis**: Re-read Hero, Equipment, Player, Team source code. Found Hero.java was missing `heroWinRate` field needed for win-rate-based scoring. Equipment already had `usageCount`, Player had `heroIdList`/`winRate`/`teamId`, Team had `playerIds`. Presented Option A (add heroWinRate field to Hero, 5 files to change, simple getter/setter) vs Option B (calculate from player data, 1 file, complex logic).
+
+**Step 2 — Formula Design**: Created `docs/recommendation-formula.md` containing:
+- Hero Score = 0.30×typePreference + 0.25×heroWinRate + 0.20×teamNeed + 0.15×playerHistory + 0.10×equipCompat (5 sub-scores, each 0–100)
+- Equipment Score = 0.35×typeMatch + 0.30×usageCount + 0.20×winRateSupport + 0.15×playerPreference (4 sub-scores)
+- Equipment-to-hero-type compatibility matrix (ATTACK→Assassin/Marksman/Warrior, DEFENSE→Tank/Warrior, MAGIC→Mage, etc.)
+- Full sub-score definition tables with scoring rules
+
+**Step 3 — RecommendationService Implementation**: New file ~210 lines with:
+- `recommendHeroesForPlayer(Player, Team, int topN)` — sorts heroes by score, returns top N
+- `recommendEquipmentForHero(Hero, Player, int topN)` — sorts equipment by score
+- `calculateHeroScore()` — weighted sum of 5 private sub-score methods
+- `calculateEquipmentScore()` — weighted sum of 4 private sub-score methods
+- 9 private calculators: calcTypePreference, calcHeroWinRateScore, calcTeamNeedScore, calcPlayerHistoryScore, calcEquipmentCompatibilityScore, calcHeroTypeMatchScore, calcUsageCountScore, calcWinRateSupportScore, calcPlayerPreferenceScore
+- `isEquipmentCompatible(HeroType, EquipmentType)` — compatibility mapping
+
+**Step 4 — Menu Integration**: Added "9. Recommendation" to both Admin and Player menus. Sub-menu with "1. Recommend Heroes for Me" and "2. Recommend Equipment for a Hero". Display shows ranked results with reason explanations (e.g., "team needs this role", "matches your preference", "high win rate", "popular item").
+
+**Step 5 — Test Data**: Initialized `heroWinRate` for 15 heroes (range: 47.2–56.0) in DataInitializer. Updated FileStorageService to save/load the new column.
+
+**Step 6 — Documentation**: Updated plan.md (concept table, service list, feature 2.9), test-cases.md (T16/T17/T18), prompts.md (Prompt 10 split into Parts A/B/C), agent-log.md (this entry).
+
+**Step 7 — Final Summary**: Produced summary of all modified/created files, new classes/methods, formulas, test instructions, and human review checklist.
+
+**Human decision**: 
+- Design decision: Chose Option A (add heroWinRate to Hero)
+- Implementation: Approved all 7 steps
+- Documentation: Requested multi-part prompts.md entry, no Git commit yet
+
 **Related commits**: TODO(HUMAN)

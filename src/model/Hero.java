@@ -5,13 +5,6 @@ import model.interfaces.Identifiable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Hero class
- *
- * Does NOT extend Person - heroes are not people.
- * Instead implements Identifiable directly, showing how interfaces
- * can unify unrelated classes.
- */
 public class Hero implements Identifiable {
     private int id;
     private String name;
@@ -19,6 +12,7 @@ public class Hero implements Identifiable {
     private int difficulty;
     private String description;
     private List<Integer> recommendedEquipIds;
+    private double heroWinRate;
 
     public Hero(int id, String name, HeroType heroType, int difficulty, String description) {
         this.id = id;
@@ -27,6 +21,7 @@ public class Hero implements Identifiable {
         this.difficulty = difficulty;
         this.description = description;
         this.recommendedEquipIds = new ArrayList<>();
+        this.heroWinRate = 0.0;
     }
 
     public void addEquipment(int equipId) {
@@ -43,12 +38,15 @@ public class Hero implements Identifiable {
     public int getDifficulty() { return difficulty; }
     public String getDescription() { return description; }
     public List<Integer> getRecommendedEquipIds() { return recommendedEquipIds; }
+    public double getHeroWinRate() { return heroWinRate; }
+    public void setHeroWinRate(double heroWinRate) { this.heroWinRate = heroWinRate; }
 
     public void displayInfo() {
         System.out.println("===== Hero Details =====");
         System.out.println("Name: " + name);
         System.out.println("Type: " + heroType.getDisplayName());
         System.out.println("Difficulty: " + difficulty + "/10");
+        System.out.println("Win Rate: " + String.format("%.1f%%", heroWinRate));
         System.out.println("Description: " + description);
         System.out.println("Recommended Equipment: " + recommendedEquipIds.size());
     }

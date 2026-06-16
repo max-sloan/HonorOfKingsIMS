@@ -233,11 +233,11 @@ None. The AI detected the issue and I confirmed the fix.
 * **Time**: Jun 14th, 2026
 * **Tool/Model**: Cherry + DeepSeek (Project Manager Agent)
 * **Agent Role**: Project Manager Agent
-* **Related Commit**: TODO(HUMAN)
+* **Related Commit**:bf178c7 (HEAD -> master) [Docs] improve CSV file storage format documentation
 
 ### My Prompt
 
-"I notice the CSV documentation in the project is not clearly recorded. I need you to check this area, tell me how to improve it, and only make changes I approve."
+I notice the CSV documentation in the project is not clearly recorded. I need you to check this area, tell me how to improve it, and only make changes I approve.
 
 ### AI Response Summary
 
@@ -278,3 +278,128 @@ Wrote the prompt for AI to check CSV documentation and accepted the 3 proposed f
 - `docs/test-cases.md` — fixed 5→6 in T14
 - `ai/prompts.md` — Prompt 09 added (this entry)
 - `ai/agent-log.md` — CSV documentation session entry added
+
+
+
+## Prompt 10 — Recommendation Engine (Multi-Part)
+
+* **Time**: Jun 16th, 2026
+* **Tool/Model**: Cherry + DeepSeek (Project Manager Agent)
+* **Agent Role**: Project Manager Agent
+* **Related Commit**: TODO(HUMAN)
+
+---
+
+### Part A — Initial Request: 7-Step Implementation Plan
+
+#### My Prompt
+
+"I want to implement a Recommendation Engine.
+Features: recommend heroes/equipment based on hero type, player preference, win rate, equipment usage, team composition.
+
+Please complete the following tasks:
+
+Step 1: Analyze existing classes (Player, Hero, Equipment, Team, MatchRecord, GameDataManager) to determine which fields the recommendation system needs.
+
+Step 2: Design the recommendation formula and write it into a document.
+Create or update docs/recommendation-formula.md, including:
+- Hero Recommendation Score formula with 5 weighted sub-scores
+- Equipment Recommendation Score formula with 4 weighted sub-scores
+Explain what each sub-score means.
+
+Step 3: Implement RecommendationService class at src/service/RecommendationService.java.
+Include at least: recommendHeroesForPlayer(), recommendEquipmentForHero(), calculateHeroScore(), calculateEquipmentScore().
+
+Step 4: Add recommendation functionality to Main menu.
+Example: Recommendation Menu with 1. Recommend heroes, 2. Recommend equipment, 3. Back.
+
+Step 5: Add test data if current data is insufficient.
+Add player preference, hero type, win rate, equipment usage count, compatible hero type data in DataInitializer.
+
+Step 6: Update documentation: plan.md, ai/prompts.md, ai/agent-log.md, docs/test-cases.md.
+Test cases must include at least 3 recommendation tests (player preference, team gap fill, equipment by hero type).
+
+Step 7: After completion, output: modified files, new classes/methods, formulas, how to test, and what needs human review.
+
+Constraints: No machine learning, no databases, no complex design patterns. Keep beginner-friendly Java style (ArrayList, for loop, if else, Comparator). Do not rewrite the entire project."
+
+---
+
+### Part B — AI Analysis and Design Decision
+
+#### AI Response Summary (Analysis Phase)
+
+PM Agent re-read Hero.java, Equipment.java, Player.java, Team.java (4 model classes) and found:
+
+| Class | Available Fields | Missing |
+|-------|-----------------|---------|
+| Hero | heroType, difficulty, recommendedEquipIds | heroWinRate needed for win-rate-based scoring |
+| Equipment | equipType, usageCount, price, attributeMap | OK |
+| Player | heroIdList (for preference inference), winRate, teamId | OK |
+| Team | playerIds (for team composition analysis) | OK |
+
+**Key Decision — Option A vs Option B:**
+
+| Option | Approach | Files to Change | Beginner-Friendly |
+|--------|----------|-----------------|-------------------|
+| A | Add heroWinRate field to Hero.java | 5 files | Yes — simple getter/setter |
+| B | Calculate from player data (average of players owning this hero) | 1 file | No — complex traversal logic |
+
+Recommended Option A.
+
+#### My Decision
+
+"Accepted Option A — add heroWinRate to Hero class. Proceed with implementation following all 7 steps."
+
+#### My Manual Change
+
+Wrote the multi-part prompt to guide the PM Agent through 7 implementation steps.
+
+---
+
+### Part C — Implementation Results
+
+#### AI Response Summary (Implementation Phase)
+
+PM Agent executed all 7 steps:
+
+**Step 1 (Field Analysis)**: Found Hero.java missing heroWinRate. Equipment.java already has usageCount. Player.java already has heroIdList/winRate/teamId.
+
+**Step 2 (Formula Document)**: Created docs/recommendation-formula.md with:
+- Hero Score = 0.30×typePreference + 0.25×heroWinRate + 0.20×teamNeed + 0.15×playerHistory + 0.10×equipCompat
+- Equipment Score = 0.35×typeMatch + 0.30×usageCount + 0.20×winRateSupport + 0.15×playerPreference
+- All sub-scores normalized to 0–100 range
+- Equipment-to-hero-type compatibility matrix table
+
+**Step 3 (RecommendationService)**: New file ~210 lines with 4 public methods + 9 private sub-score calculators.
+
+**Step 4 (Main Menu)**: Added "9. Recommendation" to both Admin and Player menus with full display logic including reason explanations (e.g., "team needs this role", "matches your preference", "high win rate").
+
+**Step 5 (Test Data)**: Added heroWinRate values for 15 heroes in DataInitializer (range: 47.2–56.0). Updated FileStorageService to save/load the new column.
+
+**Step 6 (Documentation)**: Updated plan.md, test-cases.md (T16-T18), prompts.md, agent-log.md.
+
+**Step 7 (Summary)**: Produced final checklist.
+
+#### My Decision
+
+Accepted all implementation results. Requested documentation to be written into AI .md files (this entry) without committing to Git yet.
+
+#### My Manual Change
+
+None (for this implementation phase).
+
+---
+
+### Files Modified/Created
+- `src/model/Hero.java` — added heroWinRate field, getter/setter, updated displayInfo()
+- `src/service/RecommendationService.java` — **new file** (~210 lines)
+- `src/service/FileStorageService.java` — heroWinRate column in heroes.csv save/load
+- `src/util/DataInitializer.java` — 15 hero win rate values initialized
+- `src/Main.java` — recommendation menu (option 9) + doRecommendation(), doRecommendHeroes(), doRecommendEquipment(), helper methods
+- `data/heroes.csv` — added heroWinRate column
+- `docs/recommendation-formula.md` — **new file** (full formula documentation)
+- `docs/test-cases.md` — added T16, T17, T18 (3 recommendation tests)
+- `plan.md` — added recommendation concept, service, and feature entries
+- `ai/prompts.md` — Prompt 10 (this multi-part entry)
+- `ai/agent-log.md` — recommendation session entry

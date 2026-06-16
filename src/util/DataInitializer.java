@@ -232,7 +232,24 @@ public class DataInitializer {
         adminService.addEquipmentToHero(15, 5);
         adminService.addEquipmentToHero(15, 19);
 
-        System.out.println("[Init] Created 15 heroes");
+        // Set hero win rates for recommendation engine
+        h1.setHeroWinRate(52.5);
+        h2.setHeroWinRate(48.3);
+        h3.setHeroWinRate(50.1);
+        h4.setHeroWinRate(55.8);
+        h5.setHeroWinRate(51.2);
+        h6.setHeroWinRate(56.0);
+        h7.setHeroWinRate(49.5);
+        h8.setHeroWinRate(53.7);
+        h9.setHeroWinRate(47.2);
+        h10.setHeroWinRate(50.9);
+        h11.setHeroWinRate(54.3);
+        h12.setHeroWinRate(53.1);
+        h13.setHeroWinRate(48.8);
+        h14.setHeroWinRate(51.5);
+        h15.setHeroWinRate(49.0);
+
+        System.out.println("[Init] Created 15 heroes (with win rates)");
     }
 
     /** Step 3: Create 3 teams */

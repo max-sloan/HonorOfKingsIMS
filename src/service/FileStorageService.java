@@ -78,13 +78,13 @@ public class FileStorageService {
 
     private void saveHeroes(GameDataManager dm) throws IOException {
         try (PrintWriter pw = new PrintWriter(new FileWriter(DATA_DIR + "/heroes.csv"))) {
-            pw.println("id,name,heroType,difficulty,description,equipIds");
+            pw.println("id,name,heroType,difficulty,description,equipIds,heroWinRate");
             for (Hero h : dm.getAllHeroes()) {
                 String equipIds = String.join(";",
                     h.getRecommendedEquipIds().stream().map(String::valueOf).toArray(String[]::new));
-                pw.printf(Locale.US, "%d,%s,%s,%d,%s,%s\n",
+                pw.printf(Locale.US, "%d,%s,%s,%d,%s,%s,%.1f\n",
                     h.getId(), h.getName(), h.getHeroType().name(),
-                    h.getDifficulty(), h.getDescription(), equipIds);
+                    h.getDifficulty(), h.getDescription(), equipIds, h.getHeroWinRate());
             }
         }
     }
@@ -191,6 +191,9 @@ public class FileStorageService {
                     for (String equipId : parts[5].split(";")) {
                         h.addEquipment(Integer.parseInt(equipId));
                     }
+                }
+                if (parts.length > 6 && !parts[6].isEmpty()) {
+                    h.setHeroWinRate(Double.parseDouble(parts[6]));
                 }
                 dm.addHero(h);
             }

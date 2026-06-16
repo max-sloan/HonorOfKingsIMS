@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * Main - program entry point
  *
- * Contains main menu, Admin menu (8 functions), Player menu (8 functions).
+ * Contains main menu, Admin menu (9 functions), Player menu (9 functions).
  * Uses while(true) + switch-case for menu loops.
  */
 public class Main {
@@ -17,6 +17,7 @@ public class Main {
     private static RankingService ranking;
     private static AdminDataService adminService;
     private static FileStorageService fileService;
+    private static RecommendationService recService;
 
     public static void main(String[] args) {
         dm = GameDataManager.getInstance();
@@ -25,6 +26,7 @@ public class Main {
         ranking = new RankingService();
         adminService = new AdminDataService();
         fileService = new FileStorageService();
+        recService = new RecommendationService();
 
         System.out.println("Initializing data...");
         DataInitializer.initAll(dm, adminService);
@@ -91,10 +93,10 @@ public class Main {
             System.out.println("  3. Hero Details      4. Equipment Stats");
             System.out.println("  5. Match History      6. Leaderboard");
             System.out.println("  7. Data Management    8. Save Data");
-            System.out.println("  0. Logout");
+            System.out.println("  9. Recommendation     0. Logout");
             System.out.println(line);
 
-            int choice = InputHelper.readIntInRange("Select: ", 0, 8);
+            int choice = InputHelper.readIntInRange("Select: ", 0, 9);
             switch (choice) {
                 case 1: doPlayerLookup(); break;
                 case 2: doTeamOverview(); break;
@@ -104,6 +106,7 @@ public class Main {
                 case 6: doLeaderboard(); break;
                 case 7: doDataManagement(); break;
                 case 8: doSaveData(); break;
+                case 9: doRecommendation(); break;
                 case 0: auth.logout(); System.out.println("[Logged Out]"); return;
             }
         }
@@ -121,10 +124,10 @@ public class Main {
             System.out.println("  3. Hero Details      4. Equipment Stats");
             System.out.println("  5. Match History      6. Leaderboard");
             System.out.println("  7. My Heroes         8. Edit Profile");
-            System.out.println("  0. Logout");
+            System.out.println("  9. Recommendation     0. Logout");
             System.out.println(line);
 
-            int choice = InputHelper.readIntInRange("Select: ", 0, 8);
+            int choice = InputHelper.readIntInRange("Select: ", 0, 9);
             switch (choice) {
                 case 1: doViewMyInfo(); break;
                 case 2: doTeamOverview(); break;
@@ -134,6 +137,7 @@ public class Main {
                 case 6: doLeaderboard(); break;
                 case 7: doViewMyHeroes(); break;
                 case 8: doEditMyInfo(); break;
+                case 9: doRecommendation(); break;
                 case 0: auth.logout(); System.out.println("[Logged Out]"); return;
             }
         }
@@ -437,6 +441,187 @@ public class Main {
             System.out.println("[Success]");
         }
         InputHelper.waitForEnter();
+    }
+
+    // ============ Recommendation ============
+
+    private static void doRecommendation() {
+        while (true) {
+            System.out.println("\n===== Recommendation Engine =====");
+            System.out.println("1. Recommend Heroes for Me");
+            System.out.println("2. Recommend Equipment for a Hero");
+            System.out.println("0. Back");
+            int c = InputHelper.readIntInRange("Select: ", 0, 2);
+
+            switch (c) {
+                case 1: doRecommendHeroes(); break;
+                case 2: doRecommendEquipment(); break;
+                case 0: return;
+            }
+        }
+    }
+
+    private static void doRecommendHeroes() {
+        if (!auth.isLoggedIn()) {
+            System.out.println("[Error] Please login first.");
+            return;
+        }
+
+        Player player = null;
+        Team team = null;
+
+        if (auth.isPlayer()) {
+            player = (Player) auth.getCurrentUser();
+            team = dm.findTeamById(player.getTeamId());
+        } else {
+            // Admin: need to pick a player first
+            int pid = InputHelper.readInt("Enter Player ID: ");
+            player = dm.findPlayerById(pid);
+            if (player == null) {
+                System.out.println("[Not Found]");
+                return;
+            }
+            team = dm.findTeamById(player.getTeamId());
+        }
+
+        int topN = InputHelper.readIntOrDefault("Show top N (default=5): ", 5);
+        List<Hero> heroes = recService.recommendHeroesForPlayer(player, team, topN);
+
+        System.out.println("\n========== Hero Recommendations for " + player.getName() + " ==========");
+        if (team != null) {
+            System.out.println("Team: " + team.getName());
+        }
+        System.out.println("Rank  Hero              Type        WR      Reason");
+        System.out.println("----  ----------------  ----------  ------  ----------------------------------");
+        int rank = 1;
+        for (Hero h : heroes) {
+            String reason = getHeroRecommendReason(player, h, team);
+            System.out.printf("%-4d  %-16s  %-10s  %-5.1f%%  %s\n",
+                rank++, h.getName(),
+                h.getHeroType().getDisplayName(),
+                h.getHeroWinRate(),
+                reason);
+        }
+        InputHelper.waitForEnter();
+    }
+
+    private static String getHeroRecommendReason(Player player, Hero hero, Team team) {
+        List<String> reasons = new ArrayList<>();
+
+        if (player.getHeroIdList().contains(hero.getId())) {
+            reasons.add("already owned");
+        }
+
+        // Check type match
+        int ownedCount = 0;
+        for (int hid : player.getHeroIdList()) {
+            Hero h = dm.findHeroById(hid);
+            if (h != null && h.getHeroType() == hero.getHeroType()) {
+                ownedCount++;
+            }
+        }
+        if (ownedCount >= 2) {
+            reasons.add("matches your preference");
+        }
+
+        // Check team need
+        if (team != null) {
+            boolean teamHasType = false;
+            for (int pid : team.getPlayerIds()) {
+                Player tp = dm.findPlayerById(pid);
+                if (tp != null) {
+                    for (int hid : tp.getHeroIdList()) {
+                        Hero th = dm.findHeroById(hid);
+                        if (th != null && th.getHeroType() == hero.getHeroType()) {
+                            teamHasType = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!teamHasType) {
+                reasons.add("team needs this role");
+            }
+        }
+
+        if (hero.getHeroWinRate() >= 53) {
+            reasons.add("high win rate");
+        }
+
+        if (reasons.isEmpty()) {
+            reasons.add("balanced choice");
+        }
+
+        return String.join(", ", reasons);
+    }
+
+    private static void doRecommendEquipment() {
+        System.out.println("\n===== Equipment Recommendation =====");
+        int heroId = InputHelper.readInt("Enter Hero ID: ");
+        Hero hero = dm.findHeroById(heroId);
+        if (hero == null) {
+            System.out.println("[Not Found]");
+            return;
+        }
+
+        Player player = null;
+        if (auth.isPlayer()) {
+            player = (Player) auth.getCurrentUser();
+        } else {
+            int pid = InputHelper.readIntOrDefault("Enter Player ID (0=skip): ", 0);
+            if (pid > 0) player = dm.findPlayerById(pid);
+        }
+
+        int topN = InputHelper.readIntOrDefault("Show top N (default=5): ", 5);
+        List<Equipment> equips = recService.recommendEquipmentForHero(hero, player, topN);
+
+        System.out.println("\n===== Equipment Recommendations for " + hero.getName()
+            + " [" + hero.getHeroType().getDisplayName() + "] =====");
+        System.out.println("Rank  Equipment           Type        Price   Usage  Reason");
+        System.out.println("----  ------------------  ----------  ------  -----  -------------------------");
+        int rank = 1;
+        for (Equipment e : equips) {
+            String reason = getEquipRecommendReason(hero, player, e);
+            System.out.printf("%-4d  %-18s  %-10s  %-6d  %-5d  %s\n",
+                rank++, e.getName(),
+                e.getEquipType().getDisplayName(),
+                e.getPrice(),
+                e.getUsageCount(),
+                reason);
+        }
+        InputHelper.waitForEnter();
+    }
+
+    private static String getEquipRecommendReason(Hero hero, Player player, Equipment equip) {
+        List<String> reasons = new ArrayList<>();
+
+        // Check type compatibility
+        if (hero.getRecommendedEquipIds().contains(equip.getId())) {
+            reasons.add("recommended for this hero");
+        }
+
+        if (equip.getUsageCount() >= 3) {
+            reasons.add("popular item");
+        }
+
+        if (player != null) {
+            int ownedThatUse = 0;
+            for (int hid : player.getHeroIdList()) {
+                Hero h = dm.findHeroById(hid);
+                if (h != null && h.getRecommendedEquipIds().contains(equip.getId())) {
+                    ownedThatUse++;
+                }
+            }
+            if (ownedThatUse >= 2) {
+                reasons.add("used by your heroes");
+            }
+        }
+
+        if (reasons.isEmpty()) {
+            reasons.add("viable option");
+        }
+
+        return String.join(", ", reasons);
     }
 
     // ============ Utility ============

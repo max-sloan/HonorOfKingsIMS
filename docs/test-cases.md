@@ -184,10 +184,47 @@
 
 ---
 
+## T16: Recommend Heroes by Player Preference
+
+| Item | Content |
+|------|---------|
+| **Function** | Recommendation — hero recommendation for player |
+| **Input** | Login as Player 1 (MengLei, owns 3 Assassin heroes). Select Recommendation → Recommend Heroes. |
+| **Expected** | Top 5 heroes recommended. Assassin heroes (player's preference) rank high. Heroes player already owns (Li Bai, Han Xin, Sun Wukong) should NOT appear at top. |
+| **Actual** | TODO(HUMAN) |
+| **Result** | TODO(HUMAN) |
+
+---
+
+## T17: Recommend Heroes for Team Balance
+
+| Item | Content |
+|------|---------|
+| **Function** | Recommendation — team composition gap detection |
+| **Input** | Login as Player 11 (TanRan, eStar team). TanRan owns TANK and WARRIOR heroes. eStar team has no SUPPORT heroes. |
+| **Expected** | SUPPORT-type heroes should appear in recommendations with "team needs this role" reason. |
+| **Actual** | TODO(HUMAN) |
+| **Result** | TODO(HUMAN) |
+
+---
+
+## T18: Recommend Equipment by Hero Type
+
+| Item | Content |
+|------|---------|
+| **Function** | Recommendation — equipment for a specific hero |
+| **Input** | Select Recommendation → Recommend Equipment. Enter Hero ID=1 (Li Bai, ASSASSIN). |
+| **Expected** | ATTACK-type equipment (Breaker, Infinity Edge, Grandmaster) ranked high. Equipment already recommended for Li Bai (Breaker, Infinity Edge, Calm Boots) should appear with "recommended for this hero" reason. |
+| **Actual** | TODO(HUMAN) |
+| **Result** | TODO(HUMAN) |
+
+---
+
 ## Summary
 
 | Statistic | Count |
 |-----------|-------|
-| Total tests | 15 |
+| Total tests | 18 |
 | Passed | 15 |
+| Pending (manual) | 3 |
 | Failed | 0 |
