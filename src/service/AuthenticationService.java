@@ -1,17 +1,19 @@
 package service;
 
 import model.Admin;
+import model.Person;
 import model.Player;
 
 /**
  * AuthenticationService - handles login/logout
  *
- * Uses Object type for currentUser (could be Player or Admin).
- * instanceof is used to check the actual type at runtime.
+ * Uses Person type for currentUser (polymorphism).
+ * Role is determined by Person.getRole() instead of instanceof.
+ * This is better OOP: the object itself knows its identity.
  */
 public class AuthenticationService {
     private GameDataManager dataManager;
-    private Object currentUser;
+    private Person currentUser;
 
     public AuthenticationService() {
         this.dataManager = GameDataManager.getInstance();
@@ -26,13 +28,13 @@ public class AuthenticationService {
         Player player = dataManager.findPlayerById(id);
         if (player != null && player.checkPassword(password)) {
             currentUser = player;
-            return "Player";
+            return currentUser.getRole();
         }
 
         Admin admin = dataManager.findAdminById(id);
         if (admin != null && admin.checkPassword(password)) {
             currentUser = admin;
-            return "Admin";
+            return currentUser.getRole();
         }
 
         return null;
@@ -43,27 +45,21 @@ public class AuthenticationService {
         currentUser = null;
     }
 
-    public Object getCurrentUser() {
+    public Person getCurrentUser() {
         return currentUser;
     }
 
     public boolean isAdmin() {
-        return currentUser instanceof Admin;
+        return currentUser != null && "Admin".equals(currentUser.getRole());
     }
 
     public boolean isPlayer() {
-        return currentUser instanceof Player;
+        return currentUser != null && "Player".equals(currentUser.getRole());
     }
 
     public String getCurrentUserInfo() {
-        if (currentUser instanceof Player) {
-            Player p = (Player) currentUser;
-            return "Player: " + p.getName();
-        } else if (currentUser instanceof Admin) {
-            Admin a = (Admin) currentUser;
-            return "Admin: " + a.getName();
-        }
-        return "Not logged in";
+        if (currentUser == null) return "Not logged in";
+        return currentUser.getRole() + ": " + currentUser.getName();
     }
 
     public boolean isLoggedIn() {

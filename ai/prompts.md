@@ -403,3 +403,108 @@ None (for this implementation phase).
 - `plan.md` — added recommendation concept, service, and feature entries
 - `ai/prompts.md` — Prompt 10 (this multi-part entry)
 - `ai/agent-log.md` — recommendation session entry
+
+
+
+## Prompt 11 — Data Management Menu Expansion
+
+* **Time**: Jun 17th, 2026
+* **Tool/Model**: Cherry + DeepSeek (Project Manager Agent)
+* **Agent Role**: Project Manager Agent
+* **Related Commit**: 0bedc44 [AI-Implementation] expand Data Management menu with full CRUD for all entities
+
+### My Prompt
+
+"AdminDataService already has all CRUD methods written, but the menu doesn't connect them. doDataManagement() still needs improvement."
+
+### AI Response Summary
+
+PM Agent compared AdminDataService methods with the existing menu and found that only 5 of 16 service methods were connected. The menu only handled Player CRUD, while Hero/Equipment/Team/Match CRUD and Player edit/Equip-to-Hero assignment were all missing. Presented two options: sub-menu structure (Option A, 5 sub-menus) or flat expanded menu (Option B, direct options with tips). User chose Option B with user-friendly prompts.
+
+### My Decision
+
+Chose Option B — flat expanded menu with each operation showing clear [Tip] prompts. Rejected sub-menu (Option A) to keep navigation simple.
+
+### My Manual Change
+
+None.
+
+---
+
+### AI Fix Actions
+
+Expanded `doDataManagement()` from 5 options to 17 options covering all entities:
+
+**Player** (6): Add, Delete, List, Edit (name/password), Join Team, Give Hero
+**Hero** (3): Add, Delete, List
+**Equipment** (4): Add, Delete, List, Assign to Hero
+**Team** (3): Add, Delete, List
+**Match** (1): Add Match Record (with auto player stat update)
+
+Each option has:
+- `[Tip]` explaining what the user should do next
+- Entity details displayed before deletion with `yes` confirmation
+- Enum type listing + try-catch validation for user input
+- Success/failure messages with object names
+
+### Files Modified
+- `src/Main.java` — replaced doDataManagement() + 13 new helper methods
+- `ai/prompts.md` — this entry
+- `ai/agent-log.md` — menu expansion session entry
+
+
+
+## Prompt 12 — Polishing AuthenticationService Polymorphic Design
+
+* **Time**: Jun 17th, 2026
+* **Tool/Model**: Cherry + DeepSeek (Project Manager Agent)
+* **Agent Role**: Project Manager Agent
+* **Related Commit**: TODO(HUMAN)
+
+### My Prompt
+
+"Improve the polymorphic design of AuthenticationService. The current problem: AuthenticationService uses Object currentUser + instanceof, which is not good OOP practice. Change Object currentUser to Person currentUser, and add a method to Person abstract class."
+
+### AI Response Summary
+
+PM Agent analyzed the current code: AuthenticationService used `Object currentUser` with 3 `instanceof` checks (isAdmin, isPlayer, getCurrentUserInfo). The fix added `abstract String getRole()` to Person.java. Player returns "Player", Admin returns "Admin". Admin's old `getRole()` (returning admin title like "Super Admin") was renamed to `getAdminTitle()` to avoid confusion. All `instanceof` checks were replaced with `currentUser.getRole().equals("X")`. FileStorageService updated to use `getAdminTitle()` for CSV persistence.
+
+### My Decision
+
+Accepted the polymorphic redesign.
+
+### My Manual Change
+
+None.
+
+---
+
+### AI Fix Actions
+
+1. **Person.java**: Added `abstract String getRole()` method
+2. **Player.java**: Override `getRole()` → returns `"Player"`
+3. **Admin.java**: Rename `role` field → `adminTitle`, rename `getRole()` → `getAdminTitle()`, add new `getRole()` → returns `"Admin"`
+4. **AuthenticationService.java**: Replaced `Object currentUser` with `Person currentUser`, removed all 3 `instanceof` calls, all role checks use `currentUser.getRole()`
+5. **FileStorageService.java**: Changed `a.getRole()` → `a.getAdminTitle()` for CSV save
+
+### Before vs After
+```
+// Before: Object + instanceof
+private Object currentUser;
+isAdmin() → instanceof Admin
+getCurrentUserInfo() → if (obj instanceof Player) ... else if (obj instanceof Admin) ...
+
+// After: Person + getRole() polymorphism
+private Person currentUser;
+isAdmin() → "Admin".equals(currentUser.getRole())
+getCurrentUserInfo() → currentUser.getRole() + ": " + currentUser.getName()
+```
+
+### Files Modified
+- `src/model/Person.java` — added getRole() abstract method
+- `src/model/Player.java` — implemented getRole()
+- `src/model/Admin.java` — role→adminTitle, getRole()→getAdminTitle(), new getRole()
+- `src/service/AuthenticationService.java` — Object→Person, removed instanceof
+- `src/service/FileStorageService.java` — getRole()→getAdminTitle()
+- `ai/prompts.md` — this entry
+- `ai/agent-log.md` — polymorphic design session entry

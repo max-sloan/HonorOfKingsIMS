@@ -222,3 +222,48 @@
 - Documentation: Requested multi-part prompts.md entry, no Git commit yet
 
 **Related commits**: b9f6ae1 [AI-Implementation] add recommendation engine with weighted scoring
+
+---
+
+## Project Manager Agent
+
+### Data Management Menu Expansion
+
+**Main contribution**:
+- Analyzed gap between `AdminDataService` (16 methods) and `doDataManagement()` menu (5 options)
+- Found 11 missing operations: Hero CRUD (3), Equipment CRUD + assign (4), Team CRUD (3), Match add (1)
+- Presented two design options: sub-menu structure vs flat expanded menu
+- Implemented flat expanded menu with 17 options organized by entity category:
+  - Player: Add, Delete, List, Edit (name/password), Join Team, Give Hero
+  - Hero: Add (with enum validation), Delete (with confirmation), List
+  - Equipment: Add, Delete, List, Assign to Hero (showing already-assigned status)
+  - Team: Add, Delete, List
+  - Match: Add Match Record (with team selection, result picker, auto stat update)
+- Added `[Tip]` guidance prompts for every operation
+- Added pre-deletion detail display and `yes` confirmation
+- Added `import model.enums.*` for HeroType/EquipmentType/MatchResult validation
+
+**Human decision**: Chose Option B (flat menu with user prompts) over Option A (sub-menu structure).
+
+**Related commits**: 0bedc44 [AI-Implementation] expand Data Management menu with full CRUD for all entities
+
+---
+
+## Project Manager Agent
+
+### AuthenticationService Polymorphic Refactoring
+
+**Main contribution**:
+- Identified poor OOP practice: `Object currentUser` + 3 `instanceof` checks in AuthenticationService
+- Designed polymorphic solution: add `abstract String getRole()` to Person, let subclasses declare their identity
+- Refactored 5 files:
+  - Person.java: added `abstract getRole()` method
+  - Player.java: `getRole()` returns `"Player"`
+  - Admin.java: renamed `role`→`adminTitle`, `getRole()`→`getAdminTitle()`, new `getRole()` returns `"Admin"`
+  - AuthenticationService.java: `Object`→`Person`, removed all `instanceof` calls
+  - FileStorageService.java: CSV save uses `getAdminTitle()` instead of `getRole()`
+- All role checks now use `currentUser.getRole().equals("X")` — the object tells you its identity via polymorphism
+
+**Human decision**: Accepted the polymorphic redesign.
+
+**Related commits**: TODO(HUMAN)

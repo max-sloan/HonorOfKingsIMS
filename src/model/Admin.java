@@ -1,21 +1,20 @@
 package model;
 
-/**
- * Admin class, extends Person
- *
- * Admin exists primarily as a permission checkpoint -
- * the system uses instanceof to distinguish Admin from Player.
- */
 public class Admin extends Person {
-    private String role;
+    private String adminTitle;
 
-    public Admin(int id, String name, String password, String role) {
+    public Admin(int id, String name, String password, String adminTitle) {
         super(id, name, password);
-        this.role = role;
+        this.adminTitle = adminTitle;
     }
 
+    @Override
     public String getRole() {
-        return role;
+        return "Admin";
+    }
+
+    public String getAdminTitle() {
+        return adminTitle;
     }
 
     @Override
@@ -23,11 +22,11 @@ public class Admin extends Person {
         System.out.println("===== Admin Info =====");
         System.out.println("ID: " + getId());
         System.out.println("Name: " + getName());
-        System.out.println("Role: " + role);
+        System.out.println("Role: " + adminTitle);
     }
 
     @Override
     public String toString() {
-        return super.toString() + " [" + role + "]";
+        return super.toString() + " [" + adminTitle + "]";
     }
 }

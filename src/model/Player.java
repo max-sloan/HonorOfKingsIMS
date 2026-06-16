@@ -4,16 +4,6 @@ import model.interfaces.Reportable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Player class, extends Person
- *
- * Inheritance uses the extends keyword.
- * Player automatically inherits Person's id, name, password fields and methods.
- * Also implements the Reportable interface.
- *
- * Uses "ID references" - teamId and heroIdList store IDs, not object references.
- * Benefits: avoids circular references, data lookup via GameDataManager.
- */
 public class Player extends Person implements Reportable {
     private int level;
     private int rankScore;
@@ -36,12 +26,10 @@ public class Player extends Person implements Reportable {
         this.heroIdList = new ArrayList<>();
     }
 
-    /** Get stored win rate */
     public double getWinRate() {
         return winRate;
     }
 
-    /** Recalculate win rate after stats change */
     public void updateWinRate() {
         if (totalMatches == 0) {
             this.winRate = 0.0;
@@ -50,7 +38,6 @@ public class Player extends Person implements Reportable {
         }
     }
 
-    /** Update stats after a match, auto-recalculate win rate */
     public void incrementMatch(boolean isWin) {
         this.totalMatches++;
         if (isWin) {
@@ -59,7 +46,6 @@ public class Player extends Person implements Reportable {
         updateWinRate();
     }
 
-    // Hero management
     public void addHero(int heroId) {
         if (!heroIdList.contains(heroId)) {
             heroIdList.add(heroId);
@@ -70,7 +56,6 @@ public class Player extends Person implements Reportable {
         heroIdList.remove(Integer.valueOf(heroId));
     }
 
-    // Getters and setters
     public int getLevel() { return level; }
     public void setLevel(int level) { this.level = level; }
 
@@ -90,6 +75,11 @@ public class Player extends Person implements Reportable {
 
     public List<Integer> getHeroIdList() {
         return heroIdList;
+    }
+
+    @Override
+    public String getRole() {
+        return "Player";
     }
 
     @Override

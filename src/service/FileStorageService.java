@@ -136,7 +136,7 @@ public class FileStorageService {
             pw.println("id,name,password,role");
             for (Admin a : dm.getAllAdmins()) {
                 pw.printf(Locale.US, "%d,%s,%s,%s\n",
-                    a.getId(), a.getName(), a.getPassword(), a.getRole());
+                    a.getId(), a.getName(), a.getPassword(), a.getAdminTitle());
             }
         }
     }
