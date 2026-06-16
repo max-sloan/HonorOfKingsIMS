@@ -266,7 +266,7 @@
 
 **Human decision**: Accepted the polymorphic redesign.
 
-**Related commits**: TODO(HUMAN)
+**Related commits**: ae1912d [AI-Implementation] refactor AuthenticationService to use Person polymorphism
 
 ---
 
@@ -286,4 +286,4 @@
 
 **Human decision**: Accepted test results. Dataset limitation (no Support heroes) noted.
 
-**Related commits**: TODO(HUMAN)
+**Related commits**: a8b6b4c [AI-Implementation] complete test cases and document scoring logic

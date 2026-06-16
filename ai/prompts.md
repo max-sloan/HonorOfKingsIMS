@@ -459,7 +459,7 @@ Each option has:
 * **Time**: Jun 17th, 2026
 * **Tool/Model**: Cherry + DeepSeek (Project Manager Agent)
 * **Agent Role**: Project Manager Agent
-* **Related Commit**: TODO(HUMAN)
+* **Related Commit**: ae1912d [AI-Implementation] refactor AuthenticationService polymorphism
 
 ### My Prompt
 
@@ -516,7 +516,7 @@ getCurrentUserInfo() → currentUser.getRole() + ": " + currentUser.getName()
 * **Time**: Jun 17th, 2026
 * **Tool/Model**: Cherry + DeepSeek (Project Manager Agent)
 * **Agent Role**: Project Manager Agent
-* **Related Commit**: TODO(HUMAN)
+* **Related Commit**: a8b6b4c [AI-Implementation] complete test cases and document scoring logic
 
 ### My Prompt
 
