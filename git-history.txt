@@ -1,7 +1,23 @@
-* aa83040 (HEAD -> master) [AI-Review] bug fixes from code review + final doc...
+* 83dec22 (HEAD -> master) [Docs] update commit references in AI documentation
+* a8b6b4c [AI-Implementation] complete recommendation test cases and document scoring logic
+* ae1912d [AI-Implementation] refactor AuthenticationService to use Person polymorphism instead of instanceof
+* 0bedc44 [AI-Implementation] expand Data Management menu with full CRUD for all entities
+* e20709a [Human] Revise the AI files and complete the reflection section.
+* b9f6ae1 [AI-Implementation] add recommendation engine with weighted scoring
+* bf178c7 [Docs] improve CSV file storage format documentation
+* 90f24bb [Human] fix README missing compile/run commands and unclosed code block
+* fb20049 [AI-PM] fix CSV data consistency and add Admin persistence
+* f9d8ccf [AI-Architect] add class responsibility summary table to design.md
+* bd26426 [AI-Review] fix English text inconsistencies after translation
+* 97e2631 [Human] translate entire project from Chinese to English
+* 2dbaa9f [AI-Implementation] improve file I/O: add data existence check and beginne...
+* f42e591 [AI-Implementation] auto-update player stats when match record is created
+* 9aae9a6 [AI-Architect] add sequence diagram for player lookup flow
+* 813ce2c [AI-Architect] add UML class diagram and data flow diagram to design.md
+* 2ed3a22 [AI-Review] bug fixes from code review + final documentation
 * 7963ef0 [Human] replace password hash with plain text password
 * 52d4168 [Human] checkpoint 6 complete - ready for testing phase
 * a616f59 [AI-Implementation] complete file I/O: save and load data via CSV
 * f2435d7 [Human] fix menu alignment and add player win rate simulation
-* 1da742f [AI-Implementation] implement model classes, service layer, and Mai...
+* 1da742f [AI-Implementation] implement model classes, service layer, and Main menu
 * acc907d [Human] reset project and create clean initial structure
